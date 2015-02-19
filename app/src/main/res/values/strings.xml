@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">VingtKBieresDansNosVerres</string>
+    <string name="title_activity_maps">20KBierre</string>
+    <string name="gpsDisable">Your GPS seems to be disabled, do you want to enable it ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
