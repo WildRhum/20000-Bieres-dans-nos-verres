@@ -18,7 +18,6 @@ import android.widget.TextView;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.geolocalisation.MapsActivity;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.recherche.RechercheActivity;
 
-
 public class mainPage extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
