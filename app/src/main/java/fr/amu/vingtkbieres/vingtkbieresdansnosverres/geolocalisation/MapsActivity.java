@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -18,6 +20,9 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -121,6 +126,13 @@ public class MapsActivity extends FragmentActivity {
                 .snippet(snippet));
     }
 
+    public void addMarker(double latitude, double longitude, String title) {
+        mMap.addMarker(new MarkerOptions()
+                .icon(markerIcon)
+                .position(new LatLng(latitude, longitude))
+                .title(title));
+    }
+
     private void setUpMap() {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -170,5 +182,27 @@ public class MapsActivity extends FragmentActivity {
     public void zoomPosition(Location loc, int zoom) {
         getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(loc.getLatitude(), loc.getLongitude()), zoom));
+    }
+
+    public void addMarkerFromAdress(String adr, String title) {
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+
+        try {
+            address = coder.getFromLocationName(adr, 5);
+
+            if (address == null)
+                return;
+
+            for (int i = 0; i < address.size(); ++i) {
+                Address location = address.get(i);
+                location.getLatitude();
+                location.getLongitude();
+                this.addMarker(location.getLatitude(), location.getLongitude(), title);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
