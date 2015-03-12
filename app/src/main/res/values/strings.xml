@@ -1,3 +1,21 @@
 <resources>
+    <string name="title_activity_main_page">mainPage</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_section1">Mes bières</string>
+    <string name="title_section2">Mon profil</string>
+    <string name="title_section3">Aide</string>
+    <string name="title_section4">Déconnexion</string>
+    <string name="title_section5">Quitter</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="accueil">Accueil</string>
+    <string name="title_activity_recherche">RechercheActivity</string>
+    <string name="hello_world">Hello world!</string>
+
     <string name="app_name">VingtKBieresDansNosVerres</string>
+    <string name="title_activity_maps">20KBierre</string>
+    <string name="gpsDisable">Your GPS seems to be disabled, do you want to enable it ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
