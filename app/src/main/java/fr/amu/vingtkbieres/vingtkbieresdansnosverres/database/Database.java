@@ -1,5 +1,7 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.database;
 
+import android.animation.StateListAnimator;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +56,23 @@ public class Database {
     public List<Beer> searchBeerByStyle( int idStyle ) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE style_beer=" + idStyle );
+
+        ArrayList<Beer> list = null;
+
+        while( resultSet.next() )
+        {
+            list.add( new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
+                    resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
+                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
+                    resultSet.getString( "address_beer" ) ) );
+        }
+
+        return list;
+    }
+
+    public List<Beer> searchBeerByBrewers( String brewers ) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE brewers_beer LIKE '%" + brewers + "%'" );
 
         ArrayList<Beer> list = null;
 
