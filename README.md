@@ -11,3 +11,10 @@ Pour mettre à jour votre workspace avec l'upstream
 ``` Bash
 git pull upstream
 ```
+  
+  
+## Connexion BDD
+URL pour la classe Database
+``` Text
+jdbc:mysql://addresse_bdd/nom_bdd
+```
