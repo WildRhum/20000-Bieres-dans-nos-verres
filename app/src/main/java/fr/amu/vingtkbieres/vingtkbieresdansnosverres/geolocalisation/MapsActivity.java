@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,22 +31,6 @@ public class MapsActivity extends FragmentActivity {
     private LocationManager locationManager;
 
     private Location myLocation;
-    private BitmapDescriptor markerIcon;
-
-    /*
-        Marker color constant
-    */
-
-    public static final int COLOR_RED = 0;
-    public static final int COLOR_AZURE = 210;
-    public static final int COLOR_BLUE = 240;
-    public static final int COLOR_CYAN = 180;
-    public static final int COLOR_GREEN = 120;
-    public static final int COLOR_MAGENTA = 300;
-    public static final int COLOR_ORANGE = 30;
-    public static final int COLOR_ROSE = 330;
-    public static final int COLOR_VIOLET = 270;
-    public static final int COLOR_YELLOW = 60;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,64 +58,19 @@ public class MapsActivity extends FragmentActivity {
         }
     }
 
-    public void changeMarkerIconFromRessource(int icon) {
-        markerIcon = BitmapDescriptorFactory.fromResource(icon);
+    public void addMarker(Location pos, int markerIcon) {
+        MyMarker marker = new MyMarker(mMap, pos, markerIcon, this);
     }
 
-    public void changeGoogleMarkerIconColor(int color) {
-        switch (color) {
-            case COLOR_AZURE:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
-                break;
-            case COLOR_BLUE:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
-                break;
-            case COLOR_CYAN:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN);
-                break;
-            case COLOR_GREEN:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
-                break;
-            case COLOR_MAGENTA:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA);
-                break;
-            case COLOR_ORANGE:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-                break;
-            case COLOR_RED:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-                break;
-            case COLOR_ROSE:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE);
-                break;
-            case COLOR_VIOLET:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET);
-                break;
-            case COLOR_YELLOW:
-                markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW);
-                break;
-        }
+    public void addMarker(Location pos, String title, String snippet, int markerIcon) {
+        MyMarker marker = new MyMarker(mMap, pos, markerIcon, this);
+        marker.setTitle(title);
+        marker.setSnippet(snippet);
     }
 
-    public void addMarker(Location pos) {
-        mMap.addMarker(new MarkerOptions()
-                .icon(markerIcon)
-                .position(new LatLng(pos.getLatitude(), pos.getLongitude())));
-    }
-
-    public void addMarker(Location pos, String title, String snippet) {
-        mMap.addMarker(new MarkerOptions()
-                .icon(markerIcon)
-                .position(new LatLng(pos.getLatitude(), pos.getLongitude()))
-                .title(title)
-                .snippet(snippet));
-    }
-
-    public void addMarker(double latitude, double longitude, String title) {
-        mMap.addMarker(new MarkerOptions()
-                .icon(markerIcon)
-                .position(new LatLng(latitude, longitude))
-                .title(title));
+    public void addMarker(double latitude, double longitude, String title, int markerIcon) {
+        MyMarker marker = new MyMarker(mMap, latitude, longitude, markerIcon, this);
+        marker.setTitle(title);
     }
 
     private void setUpMap() {
@@ -184,8 +124,7 @@ public class MapsActivity extends FragmentActivity {
                 new LatLng(loc.getLatitude(), loc.getLongitude()), zoom));
     }
 
-    public void addMarkerFromAdress(String adr, String title) {
-
+    public void addMarkerFromAdress(String adr, String title, int icon) {
         Geocoder coder = new Geocoder(this);
         List<Address> address;
 
@@ -199,7 +138,7 @@ public class MapsActivity extends FragmentActivity {
                 Address location = address.get(i);
                 location.getLatitude();
                 location.getLongitude();
-                this.addMarker(location.getLatitude(), location.getLongitude(), title);
+                this.addMarker(location.getLatitude(), location.getLongitude(), title, icon);
             }
         } catch (IOException e) {
             e.printStackTrace();
