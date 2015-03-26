@@ -11,6 +11,7 @@ public class Beer {
     private String brewers;
     private String style;
     private String address;
+    private String country;
 
     public Beer(int overallScore, int styleScore, float abv, String name, String brewers, String style, String address) {
         this.overallScore = overallScore;
@@ -19,7 +20,15 @@ public class Beer {
         this.name = name;
         this.brewers = brewers;
         this.style = style;
-        this.address = address;
+
+        if( address.contains( "USA" ) ){
+            this.country = "USA";
+        }
+        else{
+            this.country = address.substring( address.lastIndexOf( ',' ) + 1 ).trim();
+        }
+
+        this.address = address.replace( country, "" ).trim();
     }
 
     public int getOverallScore() {
@@ -48,5 +57,9 @@ public class Beer {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getCountry() {
+        return country;
     }
 }
