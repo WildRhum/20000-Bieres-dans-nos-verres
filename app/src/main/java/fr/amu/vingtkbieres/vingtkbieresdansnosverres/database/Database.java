@@ -2,6 +2,8 @@ package fr.amu.vingtkbieres.vingtkbieresdansnosverres.database;
 
 import android.animation.StateListAnimator;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,51 @@ public class Database {
         connection = DriverManager.getConnection( urlConnection, username, password );
     }
 
+    private String hashSHA_512( String str ) throws NoSuchAlgorithmException{
+        String out = "";
+        MessageDigest digest = MessageDigest.getInstance( "SHA-512" );
+        digest.update(str.getBytes());
+
+        byte[] data = digest.digest();
+
+        for( int i = 0; i < data.length; ++i ) {
+            String s = Integer.toHexString( new Byte( data[i] ) );
+            while( s.length() < 2 ){
+                s = "0" + s;
+            }
+
+            s = s.substring( s.length() - 2 );
+            out += s;
+        }
+
+        return out;
+    }
+
+    /* ========== STYLE ========== */
+
+    public Style getStyleById( int idStyle ) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery( "SELECT text_style FROM STYLE WHERE ID_style=" + idStyle );
+
+        resultSet.next();
+        return new Style( idStyle, resultSet.getString( "text_style" ) );
+    }
+
+    public List<Style> getAllStyle() throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery( "SELECT * FROM STYLE ORDER BY ID_style ASC" );
+
+        ArrayList<Style> list = new ArrayList<>();
+
+        while( resultSet.next() ){
+            list.add( new Style( resultSet.getInt( "ID_style" ), resultSet.getString( "text_style" ) ) );
+        }
+
+        return list;
+    }
+
+    /* ========== BEERS ========== */
+
     public Beer getBeerById( int id ) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE ID_beer=" + id );
@@ -23,30 +70,22 @@ public class Database {
         if( resultSet.next() )
             return new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
                                 resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
-                                resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
+                                resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ).text,
                                 resultSet.getString( "address_beer" ) );
         else
             return null;
-    }
-
-    public String getStyleById( int idStyle ) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery( "SELECT libelle_style FROM STYLE WHERE ID_style=" + idStyle );
-
-        resultSet.next();
-        return resultSet.getString( "libelle_style" );
     }
 
     public List<Beer> searchBeerByName( String name ) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE name_beer LIKE '%" + name + "%'" );
 
-        ArrayList<Beer> list = null;
+        ArrayList<Beer> list = new ArrayList<>();
 
         while( resultSet.next() ) {
             list.add( new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
                     resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
-                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
+                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ).text,
                     resultSet.getString( "address_beer" ) ) );
         }
 
@@ -57,13 +96,13 @@ public class Database {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE style_beer=" + idStyle );
 
-        ArrayList<Beer> list = null;
+        ArrayList<Beer> list = new ArrayList<>();
 
         while( resultSet.next() )
         {
             list.add( new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
                     resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
-                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
+                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ).text,
                     resultSet.getString( "address_beer" ) ) );
         }
 
@@ -74,16 +113,44 @@ public class Database {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE brewers_beer LIKE '%" + brewers + "%'" );
 
-        ArrayList<Beer> list = null;
+        ArrayList<Beer> list = new ArrayList<>();
 
         while( resultSet.next() )
         {
             list.add( new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
                     resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
-                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
+                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ).text,
                     resultSet.getString( "address_beer" ) ) );
         }
 
         return list;
+    }
+
+
+    /* ========== USER ========== */
+
+    public User getUserById( int idUser ) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery( "SELECT * FROM USER WHERE ID_user=" + idUser );
+
+        resultSet.next();
+        return new User( resultSet.getInt( "ID_user" ), resultSet.getString( "firstname_user" ),
+                resultSet.getString( "lastname_user" ), resultSet.getString( "email_user" ) );
+    }
+
+    public boolean connectUser( String email, String mdp ) throws SQLException, NoSuchAlgorithmException {
+
+        mdp = hashSHA_512( mdp );
+
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery( "SELECT COUNT(*) FROM USER WHERE email_user='" + email + "' AND pwd_user='" + mdp + "'" );
+
+        resultSet.next();
+        if( resultSet.getInt( 0 ) == 0 ) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }
