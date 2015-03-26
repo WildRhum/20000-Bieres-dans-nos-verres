@@ -48,7 +48,7 @@ public class LocationUpdatesManager implements LocationListener, GoogleMap.OnMyL
             map.zoomPosition(map.getMyLocation(), 14);
 
             // It's just an exemple of uses
-            map.addMarkerFromAdress("413 Avenue Gaston Berger 13625 Aix-en-Provence", "IUT AIX");
+            map.addMarkerFromAdress("413 Avenue Gaston Berger 13625 Aix-en-Provence", "IUT AIX", MyMarker.COLOR_RED);
         }
     }
 }
