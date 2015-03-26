@@ -44,8 +44,10 @@ public class Database {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery( "SELECT text_style FROM STYLE WHERE ID_style=" + idStyle );
 
-        resultSet.next();
-        return new Style( idStyle, resultSet.getString( "text_style" ) );
+        if( resultSet.next() )
+            return new Style( idStyle, resultSet.getString( "text_style" ) );
+        else
+            return null;
     }
 
     public List<Style> getAllStyle() throws SQLException {
@@ -133,9 +135,11 @@ public class Database {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery( "SELECT * FROM USER WHERE ID_user=" + idUser );
 
-        resultSet.next();
-        return new User( resultSet.getInt( "ID_user" ), resultSet.getString( "firstname_user" ),
-                resultSet.getString( "lastname_user" ), resultSet.getString( "email_user" ) );
+        if( resultSet.next() )
+            return new User( resultSet.getInt( "ID_user" ), resultSet.getString( "firstname_user" ),
+                    resultSet.getString( "lastname_user" ), resultSet.getString( "email_user" ) );
+        else
+            return null;
     }
 
     public boolean connectUser( String email, String mdp ) throws SQLException, NoSuchAlgorithmException {
@@ -152,5 +156,22 @@ public class Database {
         else {
             return true;
         }
+    }
+
+    /* ========= rate ========== */
+
+    public List<Rate> getUserRatedBeer( int idUser ) throws SQLException{
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery( "SELECT * FROM rate WHERE ID_user_rate=" + idUser);
+
+        ArrayList<Rate> list = new ArrayList<>();
+        User user = getUserById( idUser );
+
+        while( resultSet.next() ){
+            list.add( new Rate( getBeerById( resultSet.getInt( "ID_user_rate" ) ), user,
+                                resultSet.getInt( "value_rate" ), resultSet.getString( "comment_rate" ) ) );
+        }
+
+        return list;
     }
 }
