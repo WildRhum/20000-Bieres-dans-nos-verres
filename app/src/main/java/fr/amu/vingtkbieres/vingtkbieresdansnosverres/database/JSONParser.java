@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class JSONParser {
 
-    protected JSONData parseFromUrl( String... url ) {
+    public JSONData parseFromUrl( String... url ) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
 
