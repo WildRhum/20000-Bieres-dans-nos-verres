@@ -17,14 +17,14 @@ import java.io.IOException;
 /**
  * Created by legeek on 04/04/15.
  */
-public class JSONParser extends AsyncTask < String, Integer, JSONData > {
-    @Override
-    protected JSONData doInBackground(String... params) {
+public class JSONParser {
+
+    protected JSONData parseFromUrl( String... url ) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
 
         try {
-            response = client.execute(new HttpGet(params[0]));
+            response = client.execute(new HttpGet(url[0]));
             if( response.getStatusLine().getStatusCode() != HttpStatus.SC_OK ){
                 return null;
             }
@@ -32,7 +32,7 @@ public class JSONParser extends AsyncTask < String, Integer, JSONData > {
             response.getEntity().writeTo( arrayOutputStream );
 
             JSONObject object = new JSONObject( arrayOutputStream.toString() );
-
+            System.out.println( object );
             return new JSONData( object.getInt( "code" ), object.getString( "msgError" ), object.getJSONArray( "data" ) );
         }
         catch ( ClientProtocolException e ){
