@@ -34,4 +34,10 @@ public class JSONData {
     public ArrayList<JSONObject> getData() {
         return data;
     }
+
+    protected void setValues( int code, String error, ArrayList<JSONObject> data) {
+        this.code = code;
+        this.error = error;
+        this.data = data;
+    }
 }
