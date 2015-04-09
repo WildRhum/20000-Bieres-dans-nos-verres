@@ -4,29 +4,87 @@
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
 
-	<GridLayout
+	<RelativeLayout
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:columnCount="2"
-		android:rowCount="1"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
 		>
+
+		<Button
+			style="?android:attr/buttonStyleSmall"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:onClick="switchToMyBeers"
+			android:id="@+id/boutonSwitchMesBieres"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"/>
 
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="?android:attr/textAppearanceLarge"
 			android:text="@string/achievement"
-			android:layout_column="1"
-			android:id="@+id/textView"
-			android:layout_gravity="center_horizontal"/>
+            android:layout_centerHorizontal="true"
+            />
 
-		<Button
-			style="?android:attr/buttonStyleSmall"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_column="0"
-			android:onClick="switchToMesBieres"
-			android:id="@+id/boutonSwitchMesBieres"/>
-	</GridLayout>
+	</RelativeLayout>
+	<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Unlocked"
+            android:id="@+id/textUnlocked"/>
+
+        <LinearLayout
+            android:id="@+id/unlockedLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:background="#ff069000">
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="In Progress"
+            android:id="@+id/textInProgress"/>
+
+        <LinearLayout
+            android:id="@+id/inProgressLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:background="#ffffd115">
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Locked"
+            android:id="@+id/textLocked"/>
+
+        <LinearLayout
+            android:id="@+id/lockedLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#ffd90500">
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </LinearLayout>
