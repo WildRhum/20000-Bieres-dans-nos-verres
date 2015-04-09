@@ -14,7 +14,7 @@ import fr.amu.vingtkbieres.vingtkbieresdansnosverres.R;
 public class DistanceTask extends GoogleRequestAPITask {
 
     private Context context;
-    private int distance;
+    private double distance;
     private MyMarker destinationPosition;
 
     public DistanceTask(Location myLocation, MyMarker desitinationPosition) {
@@ -51,10 +51,18 @@ public class DistanceTask extends GoogleRequestAPITask {
         if (!result)
             Toast.makeText(context, R.string.directionFounded, Toast.LENGTH_LONG).show();
 
-        String str = "Distance = " + distance;
+        String unite = "m";
+
+        if(distance >= 1000) {
+            unite = "km";
+            distance = distance/1000;
+            distance = (double) Math.round(distance*100)/100;
+        }
+
+        String str = "Distance = " + distance + unite;
         Toast.makeText(context, str, Toast.LENGTH_LONG).show();
 
-        destinationPosition.setSnippet("Distance = " + distance);
+        destinationPosition.setSnippet("Distance = " + distance + " " + unite);
 
         destinationPosition.showInfoWindow();
     }
