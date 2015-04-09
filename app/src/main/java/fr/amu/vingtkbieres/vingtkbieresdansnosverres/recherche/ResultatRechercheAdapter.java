@@ -48,7 +48,9 @@ public class ResultatRechercheAdapter extends ArrayAdapter<Beer> {
         View row = convertView;
 
         if (row == null) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );//((Activity)getContext()).getLayoutInflater();
+
             row = inflater.inflate(layoutRessourceId, null);
 
             ImageView imageView1 = (ImageView)row.findViewById(R.id.img);
