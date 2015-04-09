@@ -1,7 +1,5 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.database;
 
-import android.os.AsyncTask;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -19,7 +17,7 @@ import java.io.IOException;
  */
 public class JSONParser {
 
-    public JSONData parseFromUrl( String... url ) {
+    protected JSONData parseFromUrl( String... url ) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class Database {
     static private JSONParser parser = new JSONParser();
 
-    static final private String BASE_URL               = "http://10.0.2.2/web.php";
+    static final private String BASE_URL               = "http://20kbieres.ddns.net/web.php";
 
     static final private String CODE_STYLE_BY_ID       = "0";
     static final private String CODE_STYLE_ALL         = "1";
@@ -125,7 +125,7 @@ public class Database {
         ArrayList<Beer> list = new ArrayList<>();
         for( JSONObject obj : data.getData() ) {
             list.add(new Beer(obj.getInt("overallScore_beer"), obj.getInt("styleScore_beer"),
-                    (Float) obj.get("abv_beer"), obj.getString("name_beer"),
+                    Float.parseFloat((String) (obj.get( "abv_beer" ))), obj.getString("name_beer"),
                     obj.getString("brewers_beer"), getStyleById(obj.getInt("style_beer")).text,
                     obj.getString("address_beer")));
         }
@@ -139,13 +139,13 @@ public class Database {
         if( !testJSONData( data ) )
             return null;
 
-        ArrayList<Beer> list = new ArrayList<>();
+        List<Beer> list = new ArrayList<>();
         for( JSONObject obj : data.getData() )
         {
             list.add( new Beer( obj.getInt("overallScore_beer"), obj.getInt( "styleScore_beer" ),
-                    (Float)obj.get( "abv_beer" ), obj.getString( "name_beer" ),
+                    Float.parseFloat((String) (obj.get( "abv_beer" ))), obj.getString( "name_beer" ),
                     obj.getString( "brewers_beer" ), getStyleById( obj.getInt( "style_beer" ) ).text,
-                    obj.getString( "address_beer" ) ) );
+                    obj.getString("address_beer") ) );
         }
 
         return list;
