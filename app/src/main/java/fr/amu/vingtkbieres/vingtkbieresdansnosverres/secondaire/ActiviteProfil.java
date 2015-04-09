@@ -26,8 +26,8 @@ public class ActiviteProfil extends FragmentActivity {
 		List fragments = new Vector();
 
 		// Ajout des Fragments dans la liste
-		fragments.add(Fragment.instantiate(this, PageMesBieres.class.getName()));
-		fragments.add(Fragment.instantiate(this,PageAchievements.class.getName()));
+		fragments.add(Fragment.instantiate(this, MyBeersPage.class.getName()));
+		fragments.add(Fragment.instantiate(this,AchievementsPage.class.getName()));
 
 		// Création de l'adapter qui s'occupera de l'affichage de la liste de
 		// Fragments
@@ -43,7 +43,7 @@ public class ActiviteProfil extends FragmentActivity {
 		mPager.setCurrentItem(1);
 	}
 
-	public void switchToMesBieres (View v) {
+	public void switchToMyBeers(View v) {
 		mPager.setCurrentItem(0);
 	}
 }

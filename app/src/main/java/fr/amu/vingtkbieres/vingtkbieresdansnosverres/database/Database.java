@@ -1,10 +1,13 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.database;
 
 import android.animation.StateListAnimator;
+import android.net.NetworkInfo;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.transform.Result;
 
 /**
  * Created by legeek on 12/03/15.
@@ -86,4 +89,19 @@ public class Database {
 
         return list;
     }
+
+	public List<Achievement> loadAchievements () throws SQLException {
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery( "SELECT * FROM ACHIEVMENTS a, PROGRESS p WHERE a.ID_achiev = p.ID_achiev_progress");
+
+		ArrayList<Achievement> list = null;
+
+		while ( resultSet.next() )
+		{
+			/*list.add ( new Achievement( resultSet.getString ("title_achiev"), resultSet.getInt("reach_achiev"),
+					resultSet.getInt("value_progress"), resultSet.getString("desc_achiev")));*/
+		}
+
+		return list;
+	}
 }
