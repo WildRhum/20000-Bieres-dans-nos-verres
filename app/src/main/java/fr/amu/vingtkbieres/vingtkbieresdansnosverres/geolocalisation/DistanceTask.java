@@ -55,5 +55,7 @@ public class DistanceTask extends GoogleRequestAPITask {
         Toast.makeText(context, str, Toast.LENGTH_LONG).show();
 
         destinationPosition.setSnippet("Distance = " + distance);
+
+        destinationPosition.showInfoWindow();
     }
 }

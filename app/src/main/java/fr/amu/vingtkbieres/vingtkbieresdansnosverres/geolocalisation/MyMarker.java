@@ -135,7 +135,6 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
                 .title(title)
                 .snippet(snippet));
 
-        me.showInfoWindow();
         mMap.setOnMarkerClickListener(this);
     }
 
@@ -222,5 +221,9 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
 
     public GoogleMap getMap() {
         return mMap;
+    }
+
+    public void showInfoWindow() {
+        me.showInfoWindow();
     }
 }
