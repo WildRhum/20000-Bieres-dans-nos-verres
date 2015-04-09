@@ -53,10 +53,10 @@ public class DistanceTask extends GoogleRequestAPITask {
 
         String unite = "m";
 
-        if(distance >= 1000) {
+        if (distance >= 1000) {
             unite = "km";
-            distance = distance/1000;
-            distance = (double) Math.round(distance*100)/100;
+            distance = distance / 1000;
+            distance = (double) Math.round(distance * 100) / 100;
         }
 
         String str = "Distance = " + distance + unite;

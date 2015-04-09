@@ -132,7 +132,15 @@ public class ItineraireTask extends GoogleRequestAPITask {
             double latitude = latLngArray.get(latLngArray.size() - 1).latitude;
             double longitude = latLngArray.get(latLngArray.size() - 1).longitude;
 
-            MyMarker myMarker = new MyMarker(desitinationPosition, latitude, longitude, MyMarker.COLOR_ORANGE);
+
+            MyMarker myMarker;
+
+            if (desitinationPosition.isGoogleIcon())
+                myMarker = new MyMarker(desitinationPosition, latitude, longitude,
+                        MyMarker.COLOR_ORANGE);
+            else
+                myMarker = new MyMarker(desitinationPosition, latitude, longitude,
+                        desitinationPosition.getIconId());
 
             DistanceTask distanceTask = new DistanceTask(mMap.getMyLocation(), myMarker);
             distanceTask.execute();

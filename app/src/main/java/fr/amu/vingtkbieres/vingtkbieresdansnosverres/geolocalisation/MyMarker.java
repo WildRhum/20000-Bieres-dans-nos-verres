@@ -33,6 +33,8 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
     private String snippet = null;
     private Context context;
     private Marker me;
+    private boolean isGoogleIcon = true;
+    private int iconId;
 
     public MyMarker(GoogleMap mMap, Location pos, int icon, Context context) {
         this.mMap = mMap;
@@ -150,6 +152,7 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
     }
 
     public void changeMarkerIcon(int icon) {
+        iconId = icon;
         switch (icon) {
             case COLOR_RED:
             case COLOR_AZURE:
@@ -165,6 +168,7 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
                 break;
             default:
                 changeMarkerIconFromRessource(icon);
+                this.isGoogleIcon = false;
                 break;
         }
     }
@@ -225,5 +229,13 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
 
     public void showInfoWindow() {
         me.showInfoWindow();
+    }
+
+    public boolean isGoogleIcon() {
+        return isGoogleIcon;
+    }
+
+    public int getIconId() {
+        return iconId;
     }
 }
