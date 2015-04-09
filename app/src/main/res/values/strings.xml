@@ -21,6 +21,7 @@
     <string name="mes_bieres">Mes bières</string>
     <string name="achievement">Achievements</string>
     <string name="title_activity_profil">ProfilActivity</string>
+    <string name="title_activity_detail_biere">detailBiere</string>
     <string name="language">fr</string>
     <string name="directionBegin">Calcul de l\'itinéraire</string>
     <string name="directionFounded">Itinéraire trouvé</string>
