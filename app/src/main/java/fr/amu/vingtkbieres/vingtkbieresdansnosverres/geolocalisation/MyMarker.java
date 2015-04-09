@@ -61,6 +61,38 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
         addMarker();
     }
 
+    public MyMarker(Marker marker, GoogleMap mMap, Context context) {
+        this.mMap = mMap;
+
+        Location bufPosition = new Location("");
+        bufPosition.setLatitude(marker.getPosition().latitude);
+        bufPosition.setLongitude(marker.getPosition().longitude);
+
+        this.pos = bufPosition;
+
+        changeMarkerIcon(MyMarker.COLOR_RED);
+        this.title = marker.getTitle();
+        this.snippet = marker.getSnippet();
+        this.context = context;
+        me = marker;
+    }
+
+    public MyMarker(MyMarker marker, double latitude, double longitude, int icon) {
+        Location bufPosition = new Location("");
+        bufPosition.setLatitude(latitude);
+        bufPosition.setLongitude(longitude);
+
+        this.pos = bufPosition;
+        this.mMap = marker.mMap;
+        this.title = marker.title;
+        this.snippet = marker.snippet;
+        this.context = marker.context;
+        this.me = marker.me;
+
+        changeMarkerIcon(icon);
+        addMarker();
+    }
+
     public double getMarkerLatitude() {
         return pos.getLatitude();
     }
@@ -83,10 +115,13 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
 
     public void setTitle(String title) {
         this.title = title;
+        updateMarker();
     }
 
     public void setSnippet(String snippet) {
         this.snippet = snippet;
+        me.setSnippet(snippet);
+        updateMarker();
     }
 
     public void setMarkerIcon(BitmapDescriptor markerIcon) {
@@ -100,6 +135,7 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
                 .title(title)
                 .snippet(snippet));
 
+        me.showInfoWindow();
         mMap.setOnMarkerClickListener(this);
     }
 
@@ -108,8 +144,9 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
     }
 
     public boolean onMarkerClick(Marker marker) {
-        ItineraireTask task = new ItineraireTask(context, mMap, mMap.getMyLocation(), this);
+        ItineraireTask task = new ItineraireTask(mMap.getMyLocation(), new MyMarker(marker, mMap, context));
         task.execute();
+
         return false;
     }
 
@@ -170,5 +207,21 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
 
     public void changeMarkerIconFromRessource(int icon) {
         markerIcon = BitmapDescriptorFactory.fromResource(icon);
+    }
+
+    private void updateMarker() {
+
+        if(me != null)
+            removeMarker();
+
+        addMarker();
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public GoogleMap getMap() {
+        return mMap;
     }
 }

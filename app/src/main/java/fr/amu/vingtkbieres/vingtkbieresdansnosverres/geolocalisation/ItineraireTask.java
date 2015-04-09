@@ -1,11 +1,7 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.geolocalisation;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,32 +11,31 @@ import org.w3c.dom.NodeList;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.content.Context;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.widget.Toast;
 
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.R;
 
-public class ItineraireTask extends AsyncTask<Void, Integer, Boolean> {
-
-    public static String TRACE_MODE = "walking";
+public class ItineraireTask extends GoogleRequestAPITask {
 
     private GoogleMap mMap;
-
-    private Location myLocation;
-    private MyMarker desitinationPosition;
 
     private Context context;
 
     private final ArrayList<LatLng> latLngArray = new ArrayList<LatLng>();
 
-    public ItineraireTask(Context context, GoogleMap mMap, Location myLocation, MyMarker desitinationPosition) {
-        this.context = context;
-        this.mMap= mMap;
-        this.myLocation = myLocation;
+    private MyMarker desitinationPosition;
+
+    public static List<Polyline> listPolylines = new ArrayList<Polyline>();
+
+    public ItineraireTask(Location myLocation, MyMarker desitinationPosition) {
+        super(myLocation, desitinationPosition);
+        this.context = desitinationPosition.getContext();
+        this.mMap= desitinationPosition.getMap();
         this.desitinationPosition = desitinationPosition;
     }
 
@@ -51,57 +46,27 @@ public class ItineraireTask extends AsyncTask<Void, Integer, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        try {
-            // API Url construction
-            final StringBuilder url = new StringBuilder("http://maps.googleapis.com/maps/api/directions/xml?sensor=false&language=");
-            url.append(R.string.language);
-            url.append("&origin=");
-            url.append(myLocation.getLatitude());
-            url.append(",");
-            url.append(myLocation.getLongitude());
-            url.append("&destination=");
-            url.append(desitinationPosition.getMarkerLatitude());
-            url.append(",");
-            url.append(desitinationPosition.getMarkerLongitude());
-            url.append("&mode");
-            url.append(TRACE_MODE);
 
-            // Call the web service
-            InputStream inputStream = new URL(url.toString()).openStream();
+        Document document = super.request();
 
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            documentBuilderFactory.setIgnoringComments(true);
-
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-            Document document = documentBuilder.parse(inputStream);
-            document.getDocumentElement().normalize();
-
-            // Get the request status
-            String status = document.getElementsByTagName("status").item(0).getTextContent();
-            if(!"OK".equals(status)) {
-                return false;
-            }
-
-            // Get points
-            Element elementLeg = (Element) document.getElementsByTagName("leg").item(0);
-            NodeList nodeList = elementLeg.getElementsByTagName("step");
-            int size = nodeList.getLength();
-
-            for(int i = 0; i < size; ++i) {
-                Node nodeStep = nodeList.item(i);
-
-                if(nodeStep.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) nodeStep;
-                    decodePolylines(element.getElementsByTagName("points").item(0).getTextContent());
-                }
-            }
-
-            return true;
-        }
-        catch(final Exception e) {
+        if(document == null)
             return false;
+
+        // Get points
+        Element elementLeg = (Element) document.getElementsByTagName("leg").item(0);
+        NodeList nodeList = elementLeg.getElementsByTagName("step");
+        int size = nodeList.getLength();
+
+        for(int i = 0; i < size; ++i) {
+            Node nodeStep = nodeList.item(i);
+
+            if(nodeStep.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) nodeStep;
+                decodePolylines(element.getElementsByTagName("points").item(0).getTextContent());
+            }
         }
+
+        return true;
     }
 
     /*
@@ -145,6 +110,13 @@ public class ItineraireTask extends AsyncTask<Void, Integer, Boolean> {
             Toast.makeText(context, R.string.directionFounded, Toast.LENGTH_LONG).show();
         }
         else {
+
+            // Check if there are some polyline in map
+            if(listPolylines.size() != 0) {
+                for(Polyline line : listPolylines)
+                    line.remove();
+            }
+
             PolylineOptions polylines = new PolylineOptions();
             polylines.color(context.getResources().getColor(R.color.brown));
 
@@ -156,12 +128,15 @@ public class ItineraireTask extends AsyncTask<Void, Integer, Boolean> {
 
             // Zoom to the destination point
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngArray.get(latLngArray.size() - 1), 14));
-            mMap.addPolyline(polylines);
+            listPolylines.add(mMap.addPolyline(polylines));
 
             double latitude = latLngArray.get(latLngArray.size() - 1).latitude;
             double longitude = latLngArray.get(latLngArray.size() - 1).longitude;
 
-            new MyMarker(mMap, latitude, longitude, MyMarker.COLOR_ORANGE, context);
+            MyMarker myMarker = new MyMarker(desitinationPosition, latitude, longitude, MyMarker.COLOR_ORANGE);
+
+            DistanceTask distanceTask = new DistanceTask(mMap.getMyLocation(), myMarker);
+            distanceTask.execute();
         }
     }
 }
