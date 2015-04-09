@@ -30,7 +30,7 @@ public class JSONParser {
             response.getEntity().writeTo( arrayOutputStream );
 
             JSONObject object = new JSONObject( arrayOutputStream.toString() );
-            System.out.println( object );
+            //System.out.println( object );
             return new JSONData( object.getInt( "code" ), object.getString( "msgError" ), object.getJSONArray( "data" ) );
         }
         catch ( ClientProtocolException e ){
