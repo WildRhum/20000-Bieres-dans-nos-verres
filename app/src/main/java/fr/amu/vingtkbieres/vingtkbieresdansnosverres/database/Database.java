@@ -1,6 +1,8 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.database;
 
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +33,8 @@ public class Database {
     static final private String CODE_USER_CONNECT      = "21";
 
     static final private String CODE_RATE_BY_USER      = "30";
+
+    static final private String CODE_ACHIEVEMENT_USER  = "40";
 
 
     static private String hashSHA_512( String str ) throws NoSuchAlgorithmException{
@@ -210,6 +214,21 @@ public class Database {
             list.add( new Rate( getBeerById( obj.getInt( "ID_user_rate" ) ), user,
                                 obj.getInt( "value_rate" ), obj.getString( "comment_rate" ) ) );
         }
+
+        return list;
+    }
+
+    static public List<Achievement> loadAchievements ( int idUser, Context c ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_ACHIEVEMENT_USER, String.valueOf( idUser ) ) );
+
+        ArrayList<Achievement> list = new ArrayList<>();
+
+        if( !testJSONData( data ) )
+            return null;
+
+        for( JSONObject obj : data.getData() )
+            list.add(new Achievement(c, obj.getString("title_achiev"), obj.getInt("reach_achiev"),
+                    obj.getInt("value_progress"), obj.getString("desc_achiev")));
 
         return list;
     }
