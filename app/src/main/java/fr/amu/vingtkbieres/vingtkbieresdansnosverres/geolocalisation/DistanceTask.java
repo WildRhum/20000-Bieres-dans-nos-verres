@@ -32,10 +32,10 @@ public class DistanceTask extends GoogleRequestAPITask {
         NodeList nodeList = elementLeg.getElementsByTagName("step");
         int size = nodeList.getLength();
 
-        for(int i = 0; i < size; ++i) {
+        for (int i = 0; i < size; ++i) {
             Node nodeStep = nodeList.item(i);
 
-            if(nodeStep.getNodeType() == Node.ELEMENT_NODE) {
+            if (nodeStep.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) nodeStep;
                 Element distanceVal = (Element) element.getElementsByTagName("distance").item(0);
                 NodeList value = distanceVal.getElementsByTagName("value");
@@ -48,9 +48,8 @@ public class DistanceTask extends GoogleRequestAPITask {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if(!result) {
+        if (!result)
             Toast.makeText(context, R.string.directionFounded, Toast.LENGTH_LONG).show();
-        }
 
         String str = "Distance = " + distance;
         Toast.makeText(context, str, Toast.LENGTH_LONG).show();

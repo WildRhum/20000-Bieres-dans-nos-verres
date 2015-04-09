@@ -152,16 +152,16 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
 
     public void changeMarkerIcon(int icon) {
         switch (icon) {
-            case COLOR_RED :
-            case COLOR_AZURE :
-            case COLOR_BLUE :
-            case COLOR_CYAN :
-            case COLOR_GREEN :
-            case COLOR_MAGENTA :
-            case COLOR_ORANGE :
-            case COLOR_ROSE :
-            case COLOR_VIOLET :
-            case COLOR_YELLOW :
+            case COLOR_RED:
+            case COLOR_AZURE:
+            case COLOR_BLUE:
+            case COLOR_CYAN:
+            case COLOR_GREEN:
+            case COLOR_MAGENTA:
+            case COLOR_ORANGE:
+            case COLOR_ROSE:
+            case COLOR_VIOLET:
+            case COLOR_YELLOW:
                 changeGoogleMarkerIconColor(icon);
                 break;
             default:
@@ -210,8 +210,7 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
     }
 
     private void updateMarker() {
-
-        if(me != null)
+        if (me != null)
             removeMarker();
 
         addMarker();

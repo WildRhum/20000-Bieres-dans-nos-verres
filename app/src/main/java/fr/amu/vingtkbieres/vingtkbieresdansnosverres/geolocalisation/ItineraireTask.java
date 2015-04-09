@@ -35,7 +35,7 @@ public class ItineraireTask extends GoogleRequestAPITask {
     public ItineraireTask(Location myLocation, MyMarker desitinationPosition) {
         super(myLocation, desitinationPosition);
         this.context = desitinationPosition.getContext();
-        this.mMap= desitinationPosition.getMap();
+        this.mMap = desitinationPosition.getMap();
         this.desitinationPosition = desitinationPosition;
     }
 
@@ -49,7 +49,7 @@ public class ItineraireTask extends GoogleRequestAPITask {
 
         Document document = super.request();
 
-        if(document == null)
+        if (document == null)
             return false;
 
         // Get points
@@ -57,10 +57,10 @@ public class ItineraireTask extends GoogleRequestAPITask {
         NodeList nodeList = elementLeg.getElementsByTagName("step");
         int size = nodeList.getLength();
 
-        for(int i = 0; i < size; ++i) {
+        for (int i = 0; i < size; ++i) {
             Node nodeStep = nodeList.item(i);
 
-            if(nodeStep.getNodeType() == Node.ELEMENT_NODE) {
+            if (nodeStep.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) nodeStep;
                 decodePolylines(element.getElementsByTagName("points").item(0).getTextContent());
             }
@@ -100,27 +100,26 @@ public class ItineraireTask extends GoogleRequestAPITask {
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
 
-            latLngArray.add(new LatLng((double)lat/1E5, (double)lng/1E5));
+            latLngArray.add(new LatLng((double) lat / 1E5, (double) lng / 1E5));
         }
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if(!result) {
+        if (!result) {
             Toast.makeText(context, R.string.directionFounded, Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
 
             // Check if there are some polyline in map
-            if(listPolylines.size() != 0) {
-                for(Polyline line : listPolylines)
+            if (listPolylines.size() != 0) {
+                for (Polyline line : listPolylines)
                     line.remove();
             }
 
             PolylineOptions polylines = new PolylineOptions();
             polylines.color(context.getResources().getColor(R.color.brown));
 
-            for(LatLng latLng : latLngArray) {
+            for (LatLng latLng : latLngArray) {
                 polylines.add(latLng);
             }
 
