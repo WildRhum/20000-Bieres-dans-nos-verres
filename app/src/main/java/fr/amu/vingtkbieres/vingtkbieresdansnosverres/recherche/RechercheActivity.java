@@ -9,9 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -66,8 +64,6 @@ public class RechercheActivity extends ActionBarActivity {
 //        if (arrayStyle.isEmpty())
 //            System.out.println("ArrayStyle vide!");
 
-
-        final EditText edit = (EditText) findViewById(R.id.editTexteRechercheBiere);
         Button b = (Button) findViewById(R.id.boutonRecherche);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,12 +82,6 @@ public class RechercheActivity extends ActionBarActivity {
                 }
 
                 Intent intent = new Intent(RechercheActivity.this, ResultatRechercheActivity.class);
-                // Si des styles ont été choisi
-                if(!styleChoisi.isEmpty()) {
-                    intent.putParcelableArrayListExtra("style", styleChoisi);
-                }
-                Toast.makeText(getApplicationContext(), "Pas de style choisi", Toast.LENGTH_SHORT).show();
-
                 intent.putParcelableArrayListExtra("style", styleChoisi);
                 startActivity(intent);
             }
