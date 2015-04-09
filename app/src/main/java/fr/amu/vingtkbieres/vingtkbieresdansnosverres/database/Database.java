@@ -1,5 +1,8 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.database;
 
+
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,6 +10,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.transform.Result;
 
 /**
  * Created by legeek on 12/03/15.
@@ -28,6 +33,8 @@ public class Database {
     static final private String CODE_USER_CONNECT      = "21";
 
     static final private String CODE_RATE_BY_USER      = "30";
+
+    static final private String CODE_ACHIEVEMENT_USER  = "40";
 
 
     static private String hashSHA_512( String str ) throws NoSuchAlgorithmException{
@@ -57,6 +64,9 @@ public class Database {
         return generateUrl( codeAction, p1, null );
     }
     static private String generateUrl( String codeAction, String p1, String p2 ){
+        return generateUrl( codeAction, p1, p2, null );
+    }
+    static private String generateUrl( String codeAction, String p1, String p2, String p3 ){
         String url = BASE_URL + "?action=" + codeAction;
 
         if( p1 != null ){
@@ -64,6 +74,10 @@ public class Database {
 
             if( p2 != null ){
                 url += "&p2=" + p2;
+
+                if( p3 != null){
+                    url += "&p3=" + p3;
+                }
             }
         }
 
@@ -133,8 +147,8 @@ public class Database {
         return list;
     }
 
-    static public List<Beer> searchBeerByStyle( int idStyle ) throws JSONException, JSONDataException {
-        JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_STYLE, String.valueOf(idStyle ) ) );
+    static public List<Beer> searchBeerByStyle( int idStyle, int startLimit, int numberLimit ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_STYLE, String.valueOf(idStyle ), String.valueOf( startLimit ), String.valueOf( numberLimit ) ) );
 
         if( !testJSONData( data ) )
             return null;
@@ -207,6 +221,21 @@ public class Database {
             list.add( new Rate( getBeerById( obj.getInt( "ID_user_rate" ) ), user,
                                 obj.getInt( "value_rate" ), obj.getString( "comment_rate" ) ) );
         }
+
+        return list;
+    }
+
+    static public List<Achievement> loadAchievements ( int idUser, Context c ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_ACHIEVEMENT_USER, String.valueOf( idUser ) ) );
+
+        ArrayList<Achievement> list = new ArrayList<>();
+
+        if( !testJSONData( data ) )
+            return null;
+
+        for( JSONObject obj : data.getData() )
+            list.add(new Achievement(c, obj.getString("title_achiev"), obj.getInt("reach_achiev"),
+                    obj.getInt("value_progress"), obj.getString("desc_achiev")));
 
         return list;
     }

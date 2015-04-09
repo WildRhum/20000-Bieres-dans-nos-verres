@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.R;
 
-public class PageMesBieres extends Fragment {
+public class MyBeersPage extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
