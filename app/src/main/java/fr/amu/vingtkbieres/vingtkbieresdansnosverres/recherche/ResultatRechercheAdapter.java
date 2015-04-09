@@ -4,7 +4,6 @@ package fr.amu.vingtkbieres.vingtkbieresdansnosverres.recherche;
  * Created by Hikyon on 12/03/2015.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +48,9 @@ public class ResultatRechercheAdapter extends ArrayAdapter<Beer> {
         View row = convertView;
 
         if (row == null) {
+
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );//((Activity)getContext()).getLayoutInflater();
+
             row = inflater.inflate(layoutRessourceId, null);
 
             ImageView imageView1 = (ImageView)row.findViewById(R.id.img);
