@@ -64,6 +64,9 @@ public class Database {
         return generateUrl( codeAction, p1, null );
     }
     static private String generateUrl( String codeAction, String p1, String p2 ){
+        return generateUrl( codeAction, p1, p2, null );
+    }
+    static private String generateUrl( String codeAction, String p1, String p2, String p3 ){
         String url = BASE_URL + "?action=" + codeAction;
 
         if( p1 != null ){
@@ -71,6 +74,10 @@ public class Database {
 
             if( p2 != null ){
                 url += "&p2=" + p2;
+
+                if( p3 != null){
+                    url += "&p3=" + p3;
+                }
             }
         }
 
@@ -140,8 +147,8 @@ public class Database {
         return list;
     }
 
-    static public List<Beer> searchBeerByStyle( int idStyle ) throws JSONException, JSONDataException {
-        JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_STYLE, String.valueOf(idStyle ) ) );
+    static public List<Beer> searchBeerByStyle( int idStyle, int startLimit, int numberLimit ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_STYLE, String.valueOf(idStyle ), String.valueOf( startLimit ), String.valueOf( numberLimit ) ) );
 
         if( !testJSONData( data ) )
             return null;
