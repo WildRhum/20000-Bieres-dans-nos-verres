@@ -62,6 +62,10 @@ public class ResultatRechercheActivity extends Activity {
                 for(int i = 0; i < styles.size(); ++i)
                 {
                     labelItems = Database.searchBeerByStyle(styles.get(0).id);
+                    for(int j= 0; j < labelItems.size(); ++j)
+                    {
+                        System.out.println("Test BD : " + labelItems.get(j).name );
+                    }
                     progress = (int) ((i / (float)styles.size()) * 100);
                     onProgressUpdate(progress);
                 }

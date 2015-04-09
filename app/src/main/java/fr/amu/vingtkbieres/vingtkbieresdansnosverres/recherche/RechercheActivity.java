@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import org.json.JSONException;
@@ -63,7 +64,7 @@ public class RechercheActivity extends ActionBarActivity {
 //
 //        if (arrayStyle.isEmpty())
 //            System.out.println("ArrayStyle vide!");
-
+        EditText edit = (EditText) findViewById(R.id.editTexteRechercheBiere);
         Button b = (Button) findViewById(R.id.boutonRecherche);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
