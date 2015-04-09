@@ -2,16 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-
-    <EditText
-        android:hint="Nom de bière"
-        android:id="@+id/editTexteRechercheBiere"
-        android:layout_above="@id/boutonRecherche"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true" />
-
+    
     <Button
         android:text="Recherche"
         android:id="@+id/boutonRecherche"
@@ -19,7 +10,16 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"/>
-
+        
+  <EditText
+          android:hint="Nom de bière"
+          android:id="@+id/editTexteRechercheBiere"
+          android:layout_above="@id/boutonRecherche"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:layout_alignParentBottom="true" />
+          
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
