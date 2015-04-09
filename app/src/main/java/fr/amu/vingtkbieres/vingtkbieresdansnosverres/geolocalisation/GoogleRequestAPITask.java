@@ -1,15 +1,9 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.geolocalisation;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 
-import com.google.android.gms.maps.GoogleMap;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
 import java.net.URL;
