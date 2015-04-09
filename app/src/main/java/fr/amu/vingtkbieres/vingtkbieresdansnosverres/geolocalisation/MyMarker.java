@@ -33,6 +33,8 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
     private String snippet = null;
     private Context context;
     private Marker me;
+    private boolean isGoogleIcon = true;
+    private int iconId;
 
     public MyMarker(GoogleMap mMap, Location pos, int icon, Context context) {
         this.mMap = mMap;
@@ -61,6 +63,38 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
         addMarker();
     }
 
+    public MyMarker(Marker marker, GoogleMap mMap, Context context) {
+        this.mMap = mMap;
+
+        Location bufPosition = new Location("");
+        bufPosition.setLatitude(marker.getPosition().latitude);
+        bufPosition.setLongitude(marker.getPosition().longitude);
+
+        this.pos = bufPosition;
+
+        changeMarkerIcon(MyMarker.COLOR_RED);
+        this.title = marker.getTitle();
+        this.snippet = marker.getSnippet();
+        this.context = context;
+        me = marker;
+    }
+
+    public MyMarker(MyMarker marker, double latitude, double longitude, int icon) {
+        Location bufPosition = new Location("");
+        bufPosition.setLatitude(latitude);
+        bufPosition.setLongitude(longitude);
+
+        this.pos = bufPosition;
+        this.mMap = marker.mMap;
+        this.title = marker.title;
+        this.snippet = marker.snippet;
+        this.context = marker.context;
+        this.me = marker.me;
+
+        changeMarkerIcon(icon);
+        addMarker();
+    }
+
     public double getMarkerLatitude() {
         return pos.getLatitude();
     }
@@ -83,10 +117,13 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
 
     public void setTitle(String title) {
         this.title = title;
+        updateMarker();
     }
 
     public void setSnippet(String snippet) {
         this.snippet = snippet;
+        me.setSnippet(snippet);
+        updateMarker();
     }
 
     public void setMarkerIcon(BitmapDescriptor markerIcon) {
@@ -108,27 +145,30 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
     }
 
     public boolean onMarkerClick(Marker marker) {
-        ItineraireTask task = new ItineraireTask(context, mMap, mMap.getMyLocation(), this);
+        ItineraireTask task = new ItineraireTask(mMap.getMyLocation(), new MyMarker(marker, mMap, context));
         task.execute();
+
         return false;
     }
 
     public void changeMarkerIcon(int icon) {
+        iconId = icon;
         switch (icon) {
-            case COLOR_RED :
-            case COLOR_AZURE :
-            case COLOR_BLUE :
-            case COLOR_CYAN :
-            case COLOR_GREEN :
-            case COLOR_MAGENTA :
-            case COLOR_ORANGE :
-            case COLOR_ROSE :
-            case COLOR_VIOLET :
-            case COLOR_YELLOW :
+            case COLOR_RED:
+            case COLOR_AZURE:
+            case COLOR_BLUE:
+            case COLOR_CYAN:
+            case COLOR_GREEN:
+            case COLOR_MAGENTA:
+            case COLOR_ORANGE:
+            case COLOR_ROSE:
+            case COLOR_VIOLET:
+            case COLOR_YELLOW:
                 changeGoogleMarkerIconColor(icon);
                 break;
             default:
                 changeMarkerIconFromRessource(icon);
+                this.isGoogleIcon = false;
                 break;
         }
     }
@@ -170,5 +210,32 @@ public class MyMarker implements GoogleMap.OnMarkerClickListener {
 
     public void changeMarkerIconFromRessource(int icon) {
         markerIcon = BitmapDescriptorFactory.fromResource(icon);
+    }
+
+    private void updateMarker() {
+        if (me != null)
+            removeMarker();
+
+        addMarker();
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public GoogleMap getMap() {
+        return mMap;
+    }
+
+    public void showInfoWindow() {
+        me.showInfoWindow();
+    }
+
+    public boolean isGoogleIcon() {
+        return isGoogleIcon;
+    }
+
+    public int getIconId() {
+        return iconId;
     }
 }
