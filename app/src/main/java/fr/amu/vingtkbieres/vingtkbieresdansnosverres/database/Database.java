@@ -1,9 +1,11 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.database;
 
-import android.animation.StateListAnimator;
-import android.net.NetworkInfo;
 
-import java.sql.*;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,95 +15,202 @@ import javax.xml.transform.Result;
  * Created by legeek on 12/03/15.
  */
 public class Database {
-    private Connection connection;
+    static private JSONParser parser = new JSONParser();
 
-    public Database( String urlConnection, String username, String password ) throws SQLException {
-        connection = DriverManager.getConnection( urlConnection, username, password );
+    static final private String BASE_URL               = "http://20kbieres.ddns.net/web.php";
+
+    static final private String CODE_STYLE_BY_ID       = "0";
+    static final private String CODE_STYLE_ALL         = "1";
+
+    static final private String CODE_BEER_BY_ID        = "10";
+    static final private String CODE_BEER_BY_NAME      = "11";
+    static final private String CODE_BEER_BY_STYLE     = "12";
+    static final private String CODE_BEER_BY_BREWERS   = "13";
+
+    static final private String CODE_USER_BY_ID        = "20";
+    static final private String CODE_USER_CONNECT      = "21";
+
+    static final private String CODE_RATE_BY_USER      = "30";
+
+
+    static private String hashSHA_512( String str ) throws NoSuchAlgorithmException{
+        String out = "";
+        MessageDigest digest = MessageDigest.getInstance( "SHA-512" );
+        digest.update(str.getBytes());
+
+        byte[] data = digest.digest();
+
+        for( int i = 0; i < data.length; ++i ) {
+            String s = Integer.toHexString( new Byte( data[i] ) );
+            while( s.length() < 2 ){
+                s = "0" + s;
+            }
+
+            s = s.substring( s.length() - 2 );
+            out += s;
+        }
+
+        return out;
     }
 
-    public Beer getBeerById( int id ) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE ID_beer=" + id );
+    static private String generateUrl( String codeAction ){
+        return generateUrl( codeAction, null, null );
+    }
+    static private String generateUrl( String codeAction, String p1 ){
+        return generateUrl( codeAction, p1, null );
+    }
+    static private String generateUrl( String codeAction, String p1, String p2 ){
+        String url = BASE_URL + "?action=" + codeAction;
 
-        if( resultSet.next() )
-            return new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
-                                resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
-                                resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
-                                resultSet.getString( "address_beer" ) );
+        if( p1 != null ){
+            url += "&p1=" + p1;
+
+            if( p2 != null ){
+                url += "&p2=" + p2;
+            }
+        }
+
+        return url;
+    }
+
+    static private boolean testJSONData(JSONData data) throws JSONDataException {
+        if( data == null )
+            return false;
+        else if( data.getCode() != 0 )
+            throw new JSONDataException( data.getCode(), data.getError() );
+
+        return true;
+    }
+
+    /* ========== STYLE ========== */
+
+    static public Style getStyleById( int idStyle ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_STYLE_BY_ID, String.valueOf( idStyle ) ) );
+
+        if( !testJSONData(data) )
+            return null;
+
+        return new Style( data.getCode(), data.getData().get(0).getString( "text_style" ) );
+    }
+
+    static public List<Style> getAllStyle() throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_STYLE_ALL ) );
+
+        if( !testJSONData( data ) )
+            return null;
+
+        ArrayList<Style> list = new ArrayList<>();
+
+        for( JSONObject obj : data.getData() )
+            list.add(new Style(obj.getInt("ID_style"),
+                    obj.getString("text_style")));
+
+        return list;
+    }
+
+    /* ========== BEERS ========== */
+
+    static public Beer getBeerById( int id ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_ID, String.valueOf(id) ) );
+        
+        if( testJSONData( data ) )
+            return new Beer( data.getData().get(0).getInt("overallScore_beer"), data.getData().get(0).getInt("styleScore_beer"),
+                                (Float) data.getData().get(0).get( "abv_beer" ), data.getData().get(0).getString( "name_beer" ),
+                                data.getData().get(0).getString( "brewers_beer" ), getStyleById( data.getData().get(0).getInt( "style_beer" ) ).text,
+                                data.getData().get(0).getString( "address_beer" ) );
         else
             return null;
     }
 
-    public String getStyleById( int idStyle ) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery( "SELECT libelle_style FROM STYLE WHERE ID_style=" + idStyle );
+    static public List<Beer> searchBeerByName( String name ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_NAME, name ) );
 
-        resultSet.next();
-        return resultSet.getString( "libelle_style" );
-    }
-
-    public List<Beer> searchBeerByName( String name ) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE name_beer LIKE '%" + name + "%'" );
-
-        ArrayList<Beer> list = null;
-
-        while( resultSet.next() ) {
-            list.add( new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
-                    resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
-                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
-                    resultSet.getString( "address_beer" ) ) );
+        ArrayList<Beer> list = new ArrayList<>();
+        for( JSONObject obj : data.getData() ) {
+            list.add(new Beer(obj.getInt("overallScore_beer"), obj.getInt("styleScore_beer"),
+                    Float.parseFloat((String) (obj.get( "abv_beer" ))), obj.getString("name_beer"),
+                    obj.getString("brewers_beer"), getStyleById(obj.getInt("style_beer")).text,
+                    obj.getString("address_beer")));
         }
 
         return list;
     }
 
-    public List<Beer> searchBeerByStyle( int idStyle ) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE style_beer=" + idStyle );
+    static public List<Beer> searchBeerByStyle( int idStyle ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_STYLE, String.valueOf(idStyle ) ) );
 
-        ArrayList<Beer> list = null;
+        if( !testJSONData( data ) )
+            return null;
 
-        while( resultSet.next() )
+        List<Beer> list = new ArrayList<>();
+        for( JSONObject obj : data.getData() )
         {
-            list.add( new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
-                    resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
-                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
-                    resultSet.getString( "address_beer" ) ) );
+            list.add( new Beer( obj.getInt("overallScore_beer"), obj.getInt( "styleScore_beer" ),
+                    Float.parseFloat((String) (obj.get( "abv_beer" ))), obj.getString( "name_beer" ),
+                    obj.getString( "brewers_beer" ), getStyleById( obj.getInt( "style_beer" ) ).text,
+                    obj.getString("address_beer") ) );
         }
 
         return list;
     }
 
-    public List<Beer> searchBeerByBrewers( String brewers ) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery( "SELECT * FROM BEER WHERE brewers_beer LIKE '%" + brewers + "%'" );
+    static public List<Beer> searchBeerByBrewers( String brewers ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_BREWERS, String.valueOf( brewers ) ) );
 
-        ArrayList<Beer> list = null;
+        if( !testJSONData( data ) )
+            return null;
 
-        while( resultSet.next() )
+        ArrayList<Beer> list = new ArrayList<>();
+        for( JSONObject obj : data.getData() )
         {
-            list.add( new Beer( resultSet.getInt("overallScore_beer"), resultSet.getInt( "styleScore_beer" ),
-                    resultSet.getFloat( "abv_beer" ), resultSet.getString( "name_beer" ),
-                    resultSet.getString( "brewers_beer" ), getStyleById( resultSet.getInt( "style_beer" ) ),
-                    resultSet.getString( "address_beer" ) ) );
+            list.add( new Beer( obj.getInt("overallScore_beer"), obj.getInt( "styleScore_beer" ),
+                    (Float)obj.get( "abv_beer" ), obj.getString( "name_beer" ),
+                    obj.getString( "brewers_beer" ), getStyleById( obj.getInt( "style_beer" ) ).text,
+                    obj.getString( "address_beer" ) ) );
         }
 
         return list;
     }
 
-	public List<Achievement> loadAchievements () throws SQLException {
-		Statement statement = connection.createStatement();
-		ResultSet resultSet = statement.executeQuery( "SELECT * FROM ACHIEVMENTS a, PROGRESS p WHERE a.ID_achiev = p.ID_achiev_progress");
 
-		ArrayList<Achievement> list = null;
+    /* ========== USER ========== */
 
-		while ( resultSet.next() )
-		{
-			/*list.add ( new Achievement( resultSet.getString ("title_achiev"), resultSet.getInt("reach_achiev"),
-					resultSet.getInt("value_progress"), resultSet.getString("desc_achiev")));*/
-		}
+    static public User getUserById( int idUser ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_USER_BY_ID, String.valueOf( idUser ) ) );
 
-		return list;
-	}
+        if( testJSONData( data ) )
+            return new User( data.getData().get( 0 ).getInt( "ID_user" ), data.getData().get( 0 ).getString( "firstname_user" ),
+                    data.getData().get( 0 ).getString( "lastname_user" ), data.getData().get( 0 ).getString( "email_user" ) );
+        else
+            return null;
+    }
+
+    static public boolean connectUser( String email, String mdp ) throws NoSuchAlgorithmException, JSONDataException, JSONException {
+        mdp = hashSHA_512( mdp );
+
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_USER_CONNECT, email, mdp ) );
+
+        if( !testJSONData( data ) || data.getData().get(0).getInt( "0" ) == 0 ) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    /* ========= rate ========== */
+
+    static public List<Rate> getUserRatedBeer( int idUser ) throws JSONException, JSONDataException {
+        JSONData data = parser.parseFromUrl( generateUrl( CODE_RATE_BY_USER, String.valueOf( idUser ) ) );
+
+        ArrayList<Rate> list = new ArrayList<>();
+        User user = getUserById( idUser );
+
+        for( JSONObject obj : data.getData() ){
+            list.add( new Rate( getBeerById( obj.getInt( "ID_user_rate" ) ), user,
+                                obj.getInt( "value_rate" ), obj.getString( "comment_rate" ) ) );
+        }
+
+        return list;
+    }
 }

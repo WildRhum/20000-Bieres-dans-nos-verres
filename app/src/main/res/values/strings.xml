@@ -18,7 +18,10 @@
     <string name="gpsDisable">Your GPS seems to be disabled, do you want to enable it ?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-	<string name="mes_bieres">Mes bières</string>
-	<string name="achievement">Achievements</string>
-	<string name="title_activity_profil">ProfilActivity</string>
+    <string name="mes_bieres">Mes bières</string>
+    <string name="achievement">Achievements</string>
+    <string name="title_activity_profil">ProfilActivity</string>
+    <string name="language">fr</string>
+    <string name="directionBegin">Calcul de l\'itinéraire</string>
+    <string name="directionFounded">Itinéraire trouvé</string>
 </resources>

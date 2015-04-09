@@ -4,13 +4,14 @@ package fr.amu.vingtkbieres.vingtkbieresdansnosverres.database;
  * Created by legeek on 12/03/15.
  */
 public class Beer {
-    private int overallScore;
-    private int styleScore;
-    private float abv;
-    private String name;
-    private String brewers;
-    private String style;
-    private String address;
+    public final int overallScore;
+    public final int styleScore;
+    public final float abv;
+    public final String name;
+    public final String brewers;
+    public final String style;
+    public final String address;
+    public final String country;
 
     public Beer(int overallScore, int styleScore, float abv, String name, String brewers, String style, String address) {
         this.overallScore = overallScore;
@@ -19,34 +20,14 @@ public class Beer {
         this.name = name;
         this.brewers = brewers;
         this.style = style;
-        this.address = address;
-    }
 
-    public int getOverallScore() {
-        return overallScore;
-    }
+        if( address.contains( "USA" ) ){
+            this.country = "USA";
+        }
+        else{
+            this.country = address.substring( address.lastIndexOf( ',' ) + 1 ).trim();
+        }
 
-    public int getStyleScore() {
-        return styleScore;
-    }
-
-    public float getAbv() {
-        return abv;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getBrewers() {
-        return brewers;
-    }
-
-    public String getStyle() {
-        return style;
-    }
-
-    public String getAddress() {
-        return address;
+        this.address = address.replace( country, "" ).trim();
     }
 }
