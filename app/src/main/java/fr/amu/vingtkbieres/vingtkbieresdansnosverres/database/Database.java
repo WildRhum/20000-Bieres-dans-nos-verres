@@ -189,16 +189,16 @@ public class Database {
             return null;
     }
 
-    static public boolean connectUser( String email, String mdp ) throws NoSuchAlgorithmException, JSONDataException, JSONException {
+    static public int connectUser( String email, String mdp ) throws NoSuchAlgorithmException, JSONDataException, JSONException {
         mdp = hashSHA_512( mdp );
 
         JSONData data = parser.parseFromUrl( generateUrl( CODE_USER_CONNECT, email, mdp ) );
 
-        if( !testJSONData( data ) || data.getData().get(0).getInt( "0" ) == 0 ) {
-            return false;
+        if( !testJSONData( data ) || data.getData().isEmpty() ) {
+            return -1;
         }
         else {
-            return true;
+            return data.getData().get(0).getInt( "ID_user" );
         }
     }
 
