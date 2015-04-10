@@ -38,15 +38,18 @@
         </activity>
         <activity
             android:name=".recherche.ResultatRechercheActivity"
-            android:label="@string/title_activity_recherche" >
+            android:label="@string/title_activity_recherche"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".recherche.DetailBiere"
-            android:label="@string/title_activity_detail_biere" >
+            android:label="@string/title_activity_detail_biere"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".recherche.RechercheActivity"
-            android:label="@string/title_activity_recherche" >
+            android:label="@string/title_activity_recherche"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".secondaire.ActiviteProfil"
