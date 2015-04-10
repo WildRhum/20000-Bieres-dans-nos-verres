@@ -39,50 +39,58 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Unlocked"
-            android:id="@+id/textUnlocked"/>
+            android:id="@+id/textUnlocked"
+            android:layout_marginBottom="10dp"
+            />
 
-        <LinearLayout
+        <GridLayout
             android:id="@+id/unlockedLayout"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
-            android:background="#ff069000">
-        </LinearLayout>
+            android:background="#ff069000"
+            android:columnCount="2"
+            android:backgroundTint="@color/light_yellow">
+        </GridLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="In Progress"
-            android:id="@+id/textInProgress"/>
+            android:id="@+id/textInProgress"
+            android:layout_marginBottom="10dp"/>
 
-        <LinearLayout
+        <GridLayout
             android:id="@+id/inProgressLayout"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
-            android:background="#ffffd115">
-        </LinearLayout>
+            android:background="#ffffd115"
+            android:columnCount="2">
+        </GridLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Locked"
-            android:id="@+id/textLocked"/>
+            android:id="@+id/textLocked"
+            android:layout_marginBottom="10dp"/>
 
-        <LinearLayout
+        <GridLayout
             android:id="@+id/lockedLayout"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="#ffd90500">
-        </LinearLayout>
+            android:background="#ffd90500"
+            android:columnCount="2">
+        </GridLayout>
 
 
     </LinearLayout>
