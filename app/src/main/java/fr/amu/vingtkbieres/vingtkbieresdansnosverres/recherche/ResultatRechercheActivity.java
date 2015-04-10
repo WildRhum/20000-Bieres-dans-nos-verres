@@ -24,7 +24,7 @@ import fr.amu.vingtkbieres.vingtkbieresdansnosverres.database.Style;
 
 public class ResultatRechercheActivity extends Activity {
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-    protected ListView listBiere;
+    protected ListView listBiere = null;
     List<Beer> labelItems;
     ResultatRechercheAdapter adapter;
     ArrayList<Style> styles = new ArrayList<Style>();
@@ -61,7 +61,7 @@ public class ResultatRechercheActivity extends Activity {
                 int progress;
                 for(int i = 0; i < styles.size(); ++i)
                 {
-                    labelItems = Database.searchBeerByStyle(styles.get(0).id, 0, 100);
+                    labelItems = Database.searchBeerByStyle(styles.get(0).id, 0, 15);
                     progress = (int) ((i / (float)styles.size()) * 100);
                     onProgressUpdate(progress);
                 }
