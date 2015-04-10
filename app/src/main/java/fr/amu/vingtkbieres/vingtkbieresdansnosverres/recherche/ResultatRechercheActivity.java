@@ -25,7 +25,7 @@ import fr.amu.vingtkbieres.vingtkbieresdansnosverres.database.Style;
 public class ResultatRechercheActivity extends Activity {
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     protected ListView listBiere = null;
-    List<Beer> labelItems;
+    List<Beer> labelItems = new ArrayList<Beer>();
     ResultatRechercheAdapter adapter;
     ArrayList<Style> styles = new ArrayList<Style>();
 
@@ -40,6 +40,7 @@ public class ResultatRechercheActivity extends Activity {
                 mProgressDialog.setMessage("Chargement des bières ...");
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 mProgressDialog.setCancelable(true);
+                mProgressDialog.setIndeterminate(false);
                 mProgressDialog.show();
                 return mProgressDialog;
             default:
@@ -59,25 +60,18 @@ public class ResultatRechercheActivity extends Activity {
         protected Void doInBackground(Void... params) {
             List<Beer> tmpBeer;
             try {
-                int progress = 0;
                 for(int i = 0; i < styles.size(); ++i)
                 {
+                    // place les bières dans un arrayList temporaire
                     tmpBeer = Database.searchBeerByStyle(styles.get(i).id, 0, 15);
-                    if(labelItems == null)
-                    {
-                        labelItems = tmpBeer;
-                        publishProgress((int) ((i / (float) styles.size()) * 100));
-                        // Escape early if cancel() is called
-                        if (isCancelled()) break;
+
+                    for(int j = 0; j < tmpBeer.size(); ++j) {
+                        // ajoute les valeurs petit à petit dans la liste
+                        labelItems.add(tmpBeer.get(j));
+                        // met à jour la progression
+                        publishProgress((int) ((i / (float) styles.size())* 100 + ((100/styles.size())/tmpBeer.size())*j));
                     }
-                    else
-                    {
-                        for(int j = 0; j < tmpBeer.size(); ++j) {
-                            labelItems.add(tmpBeer.get(j));
-                            progress = ((j+1/styles.size()* 100));
-                            mProgressDialog.incrementProgressBy(progress);
-                        }
-                    }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -87,8 +81,11 @@ public class ResultatRechercheActivity extends Activity {
             return null;
         }
 
-        protected void onProgressUpdate(Integer... progress) {
-            setProgress((progress[0]));
+
+        @Override
+        public void onProgressUpdate(Integer... args){
+            System.out.println("Mise a jour valeur : " + args[0]);
+            mProgressDialog.setProgress(args[0]);
         }
 
         @Override
