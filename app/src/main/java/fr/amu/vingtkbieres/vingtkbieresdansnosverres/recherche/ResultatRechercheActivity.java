@@ -39,7 +39,7 @@ public class ResultatRechercheActivity extends Activity {
                 mProgressDialog = new ProgressDialog(this);
                 mProgressDialog.setMessage("Chargement des bières ...");
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                mProgressDialog.setCancelable(false);
+                mProgressDialog.setCancelable(true);
                 mProgressDialog.show();
                 return mProgressDialog;
             default:
@@ -47,7 +47,7 @@ public class ResultatRechercheActivity extends Activity {
         }
     }
 
-    private class asyncDbTest extends AsyncTask< Void, Void, Void > {
+    private class asyncDbTest extends AsyncTask< Void, Integer, Void > {
 
         @Override
         protected void onPreExecute() {
@@ -57,13 +57,27 @@ public class ResultatRechercheActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            List<Beer> tmpBeer;
             try {
-                int progress;
+                int progress = 0;
                 for(int i = 0; i < styles.size(); ++i)
                 {
-                    labelItems = Database.searchBeerByStyle(styles.get(0).id, 0, 15);
-                    progress = (int) ((i / (float)styles.size()) * 100);
-                    onProgressUpdate(progress);
+                    tmpBeer = Database.searchBeerByStyle(styles.get(i).id, 0, 15);
+                    if(labelItems == null)
+                    {
+                        labelItems = tmpBeer;
+                        publishProgress((int) ((i / (float) styles.size()) * 100));
+                        // Escape early if cancel() is called
+                        if (isCancelled()) break;
+                    }
+                    else
+                    {
+                        for(int j = 0; j < tmpBeer.size(); ++j) {
+                            labelItems.add(tmpBeer.get(j));
+                            progress = ((j+1/styles.size()* 100));
+                            mProgressDialog.incrementProgressBy(progress);
+                        }
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -74,7 +88,7 @@ public class ResultatRechercheActivity extends Activity {
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            setProgress(progress[0]);
+            setProgress((progress[0]));
         }
 
         @Override
@@ -84,13 +98,17 @@ public class ResultatRechercheActivity extends Activity {
             if(labelItems.isEmpty())
             {
                 Toast.makeText(getBaseContext(), "Il n'y à pas de bières associées a cette recherche", Toast.LENGTH_SHORT).show();
+                finish();
             }
-            adapter = new ResultatRechercheAdapter(getBaseContext(),
-                    R.layout.list_biere, labelItems);
+            else
+            {
+                adapter = new ResultatRechercheAdapter(getBaseContext(),
+                        R.layout.list_biere, labelItems);
 
-            // Place les éléments
-            //Collections.sort(labelItems, String.CASE_INSENSITIVE_ORDER);
-            listBiere.setAdapter(adapter);
+                // Place les éléments
+                //Collections.sort(labelItems, String.CASE_INSENSITIVE_ORDER);
+                listBiere.setAdapter(adapter);
+            }
         }
     }
 
