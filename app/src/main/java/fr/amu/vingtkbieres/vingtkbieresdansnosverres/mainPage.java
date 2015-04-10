@@ -1,7 +1,10 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,6 +41,32 @@ public class mainPage extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+
+        SharedPreferences runCheck = getSharedPreferences("hasRunBefore", 0); // charge les préférences
+        Boolean hasRun = runCheck.getBoolean("hasRun", false); // récupére la valeur de hasRun
+        if (!hasRun) {
+            // L'application n'a pas été lancée, ou il n'y a plus de données
+            SharedPreferences settings = getSharedPreferences("hasRunBefore", 0);
+            SharedPreferences.Editor edit = settings.edit();
+            edit.putBoolean("hasRun", true); // maintenant, elle a été lancée
+            edit.commit();
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
+            alertDialogBuilder.setTitle("Bienvenue dans l'application 20K Biere!")
+                    .setMessage("Pour utiliser l'application, cliquez sur les images!")
+                    .setIcon(R.drawable.ic_launcher)
+                    .setCancelable(true)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                        }
+                    });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();           
+        }
+        // L'application a déjà été lancée, alors utilisation normale
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_main);
