@@ -1,6 +1,5 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.geolocalisation;
 
-import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -49,6 +48,8 @@ public class LocationUpdatesManager implements LocationListener, GoogleMap.OnMyL
 
             // It's just an exemple of uses
             map.addMarkerFromAdress("413 Avenue Gaston Berger 13625 Aix-en-Provence", "IUT AIX", MyMarker.COLOR_RED);
+
+            map.addMarkerFromAdress("Marseille", "Marseille", MyMarker.COLOR_RED);
         }
     }
 }
