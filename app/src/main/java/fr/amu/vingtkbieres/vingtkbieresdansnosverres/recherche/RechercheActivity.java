@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -64,7 +65,7 @@ public class RechercheActivity extends ActionBarActivity {
 //
 //        if (arrayStyle.isEmpty())
 //            System.out.println("ArrayStyle vide!");
-        EditText edit = (EditText) findViewById(R.id.editTexteRechercheBiere);
+        final EditText edit = (EditText) findViewById(R.id.editTexteRechercheBiere);
         Button b = (Button) findViewById(R.id.boutonRecherche);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,10 +82,17 @@ public class RechercheActivity extends ActionBarActivity {
                         }
                     }
                 }
+                String nomBiere = edit.getText().toString();
 
-                Intent intent = new Intent(RechercheActivity.this, ResultatRechercheActivity.class);
-                intent.putParcelableArrayListExtra("style", styleChoisi);
-                startActivity(intent);
+                if(nomBiere.equals("null") || styleChoisi.isEmpty())
+                    Toast.makeText(getBaseContext(), "Veuillez choisir des styles de bière ou bien entrer un nom dans la recherche", Toast.LENGTH_SHORT).show();
+                else
+                {
+                    Intent intent = new Intent(RechercheActivity.this, ResultatRechercheActivity.class);
+                    intent.putExtra("nom", nomBiere);
+                    intent.putParcelableArrayListExtra("style", styleChoisi);
+                    startActivity(intent);
+                }
             }
         });
     }
