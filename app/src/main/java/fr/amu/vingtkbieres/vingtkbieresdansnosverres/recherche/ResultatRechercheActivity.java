@@ -123,7 +123,7 @@ public class ResultatRechercheActivity extends Activity {
                 Intent detailBiere = new Intent(ResultatRechercheActivity.this, DetailBiere.class);
                 Beer biere = (Beer) adapter.getItemAtPosition(position);
 
-                detailBiere.putExtra("nomBiere", biere.name);
+                detailBiere.putExtra("nomBiere", biere);
 
                 startActivity(detailBiere);
                 onPause();

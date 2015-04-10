@@ -64,7 +64,7 @@ public class mainPage extends ActionBarActivity
                     });
 
             AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();           
+            alertDialog.show();
         }
         // L'application a déjà été lancée, alors utilisation normale
 
