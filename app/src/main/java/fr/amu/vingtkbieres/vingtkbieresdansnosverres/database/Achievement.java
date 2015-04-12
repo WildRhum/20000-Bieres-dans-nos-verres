@@ -10,9 +10,9 @@ import fr.amu.vingtkbieres.vingtkbieresdansnosverres.secondaire.MyListener;
 /**
  * Created by Leirone on 26/03/2015.
  */
-public class Achievement extends LinearLayout {
+public class Achievement {
     private TextView name;
-    private ProgressBar progess;
+    private ProgressBar progress;
 	private int state;
 
 	public static final int NOT_STARTED = 0;
@@ -20,14 +20,17 @@ public class Achievement extends LinearLayout {
 	public static final int ACHIEVED = 2;
 
 	public Achievement (Context c, String name, int toReach, int current, String desc) {
-        super(c);
-        setOrientation(VERTICAL);
+        /*super(c);
+        setOrientation(HORIZONTAL);*/
         this.name = new TextView (c);
-        this.setOnClickListener(new MyListener(desc, getContext()));
-        this.progess = new ProgressBar (c, null, android.R.attr.progressBarStyleHorizontal);
+        this.name.setOnClickListener(new MyListener(desc, c));
+
+        this.progress = new ProgressBar (c, null, android.R.attr.progressBarStyleHorizontal);
+
 		this.name.setText(name);
-        this.progess.setMax(toReach);
-        this.progess.setProgress(current);
+        this.progress.setMax(toReach);
+        this.progress.setProgress(current);
+        this.progress.setOnClickListener(new MyListener(desc, c));
 
 		if (current == 0)
 			state = NOT_STARTED;
@@ -36,9 +39,11 @@ public class Achievement extends LinearLayout {
 		else
 			state = IN_PROGRESS;
 
-        addView(this.name);
-        addView(this.progess);
+        //addView(this.name);
+        //addView(this.progress);
 	}
 
     public int getState () { return state; }
+    public TextView getName () { return name; }
+    public ProgressBar getProgess () { return progress; }
 }

@@ -25,4 +25,5 @@
     <string name="language">fr</string>
     <string name="directionBegin">Calcul de l\'itinéraire</string>
     <string name="directionFounded">Itinéraire trouvé</string>
+    <string name="internetProblem">Problème pour récuperer les données, vérifiez votre connexion internet.</string>
 </resources>

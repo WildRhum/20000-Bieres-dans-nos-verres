@@ -37,6 +37,15 @@
             android:src="@drawable/recherche"/>
     </LinearLayout>
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mes bières"
+        android:id="@+id/myBeersButton"
+        android:layout_below="@+id/boutonMenu"
+        android:layout_centerHorizontal="true"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
