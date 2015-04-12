@@ -67,10 +67,10 @@ public class RechercheActivity extends ActionBarActivity {
                 // array des styles choisi
                 ArrayList<Style> styleChoisi = new ArrayList<Style>();
 
-                for(int i = 0; i < arrayStyle.size(); ++i)
+                for(int i = 1; i < arrayStyle.size(); ++i)
                 {
                     // pour chaque style, s'il est coché on l'ajoute aux styles choisi
-                    if(checkBox.get(i).isChecked()){
+                    if(checkBox.get(i-1).isChecked()){
                         styleChoisi.add(arrayStyle.get(i));
                     }
                 }
@@ -97,9 +97,9 @@ public class RechercheActivity extends ActionBarActivity {
         LinearLayout ll = (LinearLayout) findViewById(R.id.rechercheBiere);
 
         // creation des checkBox
-        for(int i = 0; i < arrayStyle.size(); i++){
+        for(int i = 1; i < arrayStyle.size(); i++){
             CheckBox newCheckBox = new CheckBox(this);
-            newCheckBox.setId(i);
+            newCheckBox.setId(i-1);
             newCheckBox.setText(arrayStyle.get(i).text);
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
