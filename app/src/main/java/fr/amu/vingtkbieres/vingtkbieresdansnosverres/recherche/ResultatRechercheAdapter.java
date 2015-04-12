@@ -65,7 +65,7 @@ public class ResultatRechercheAdapter extends ArrayAdapter<Beer> {
                 style = "Inconnu";
             textViewStyleBiere.setText(style);
 
-            String country = data.get(position).country.toLowerCase();
+            String country = data.get(position).country.replaceAll(" ", "_").toLowerCase();
             int resID = getContext().getResources().getIdentifier(
                     country , "drawable", getContext().getPackageName());
 
