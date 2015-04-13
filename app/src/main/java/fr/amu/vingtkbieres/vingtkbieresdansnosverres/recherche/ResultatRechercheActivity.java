@@ -38,9 +38,8 @@ public class ResultatRechercheActivity extends Activity {
             case DIALOG_DOWNLOAD_PROGRESS:
                 mProgressDialog = new ProgressDialog(this);
                 mProgressDialog.setMessage("Chargement des bières ...");
-                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 mProgressDialog.setCancelable(true);
-                mProgressDialog.setIndeterminate(false);
+                mProgressDialog.setIndeterminate(true);
                 mProgressDialog.show();
                 return mProgressDialog;
             default:
@@ -48,7 +47,7 @@ public class ResultatRechercheActivity extends Activity {
         }
     }
 
-    private class asyncDbTest extends AsyncTask< Void, Integer, Void > {
+    private class asyncDbTest extends AsyncTask< Void, Void, Void > {
 
         @Override
         protected void onPreExecute() {
@@ -68,8 +67,6 @@ public class ResultatRechercheActivity extends Activity {
                     for(int j = 0; j < tmpBeer.size(); ++j) {
                         // ajoute les valeurs petit à petit dans la liste
                         labelItems.add(tmpBeer.get(j));
-                        // met à jour la progression
-                        publishProgress((int) ((i / (float) styles.size())* 100 + ((100/styles.size())/tmpBeer.size())*j));
                     }
 
                 }
@@ -79,13 +76,6 @@ public class ResultatRechercheActivity extends Activity {
                 e.printStackTrace();
             }
             return null;
-        }
-
-
-        @Override
-        public void onProgressUpdate(Integer... args){
-            System.out.println("Mise a jour valeur : " + args[0]);
-            mProgressDialog.setProgress(args[0]);
         }
 
         @Override
