@@ -12,11 +12,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
-    <string name="title_activity_recherche">RechercheActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_recherche">Recherche</string>*
 
     <string name="app_name">20.000 Bieres Dans Nos Verres</string>
-    <string name="title_activity_maps">20KBierre</string>
+    <string name="title_activity_maps">Geolocalisation</string>
     <string name="gpsDisable">Your GPS seems to be disabled, do you want to enable it ?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>

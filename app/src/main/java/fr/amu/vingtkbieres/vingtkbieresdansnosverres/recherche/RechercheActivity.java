@@ -32,9 +32,6 @@ public class RechercheActivity extends ActionBarActivity {
         protected Void doInBackground(Void... params) {
             try {
                 styles = new ArrayList<>( Database.getAllStyle() );
-                for( Style s : styles ){
-                    System.out.println( s.text );
-                }
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (JSONDataException e) {
