@@ -15,7 +15,7 @@
     <string name="title_activity_recherche">RechercheActivity</string>
     <string name="hello_world">Hello world!</string>
 
-    <string name="app_name">VingtKBieresDansNosVerres</string>
+    <string name="app_name">20.000 Bieres Dans Nos Verres</string>
     <string name="title_activity_maps">20KBierre</string>
     <string name="gpsDisable">Your GPS seems to be disabled, do you want to enable it ?</string>
     <string name="yes">Yes</string>
@@ -27,4 +27,5 @@
     <string name="language">fr</string>
     <string name="directionBegin">Calcul de l\'itinéraire</string>
     <string name="directionFounded">Itinéraire trouvé</string>
+    <string name="internetProblem">Problème pour récuperer les données, vérifiez votre connexion internet.</string>
 </resources>

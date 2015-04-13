@@ -24,8 +24,8 @@ import fr.amu.vingtkbieres.vingtkbieresdansnosverres.database.Style;
 
 public class ResultatRechercheActivity extends Activity {
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-    protected ListView listBiere;
-    List<Beer> labelItems;
+    protected ListView listBiere = null;
+    List<Beer> labelItems = new ArrayList<Beer>();
     ResultatRechercheAdapter adapter;
     ArrayList<Style> styles = new ArrayList<Style>();
 
@@ -39,7 +39,8 @@ public class ResultatRechercheActivity extends Activity {
                 mProgressDialog = new ProgressDialog(this);
                 mProgressDialog.setMessage("Chargement des bières ...");
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                mProgressDialog.setCancelable(false);
+                mProgressDialog.setCancelable(true);
+                mProgressDialog.setIndeterminate(false);
                 mProgressDialog.show();
                 return mProgressDialog;
             default:
@@ -47,7 +48,7 @@ public class ResultatRechercheActivity extends Activity {
         }
     }
 
-    private class asyncDbTest extends AsyncTask< Void, Void, Void > {
+    private class asyncDbTest extends AsyncTask< Void, Integer, Void > {
 
         @Override
         protected void onPreExecute() {
@@ -57,13 +58,20 @@ public class ResultatRechercheActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            List<Beer> tmpBeer;
             try {
-                int progress;
                 for(int i = 0; i < styles.size(); ++i)
                 {
-                    labelItems = Database.searchBeerByStyle(styles.get(0).id, 0, 100);
-                    progress = (int) ((i / (float)styles.size()) * 100);
-                    onProgressUpdate(progress);
+                    // place les bières dans un arrayList temporaire
+                    tmpBeer = Database.searchBeerByStyle(styles.get(i).id, 0, 15);
+
+                    for(int j = 0; j < tmpBeer.size(); ++j) {
+                        // ajoute les valeurs petit à petit dans la liste
+                        labelItems.add(tmpBeer.get(j));
+                        // met à jour la progression
+                        publishProgress((int) ((i / (float) styles.size())* 100 + ((100/styles.size())/tmpBeer.size())*j));
+                    }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -73,8 +81,11 @@ public class ResultatRechercheActivity extends Activity {
             return null;
         }
 
-        protected void onProgressUpdate(Integer... progress) {
-            setProgress(progress[0]);
+
+        @Override
+        public void onProgressUpdate(Integer... args){
+            System.out.println("Mise a jour valeur : " + args[0]);
+            mProgressDialog.setProgress(args[0]);
         }
 
         @Override
@@ -84,13 +95,17 @@ public class ResultatRechercheActivity extends Activity {
             if(labelItems.isEmpty())
             {
                 Toast.makeText(getBaseContext(), "Il n'y à pas de bières associées a cette recherche", Toast.LENGTH_SHORT).show();
+                finish();
             }
-            adapter = new ResultatRechercheAdapter(getBaseContext(),
-                    R.layout.list_biere, labelItems);
+            else
+            {
+                adapter = new ResultatRechercheAdapter(getBaseContext(),
+                        R.layout.list_biere, labelItems);
 
-            // Place les éléments
-            //Collections.sort(labelItems, String.CASE_INSENSITIVE_ORDER);
-            listBiere.setAdapter(adapter);
+                // Place les éléments
+                //Collections.sort(labelItems, String.CASE_INSENSITIVE_ORDER);
+                listBiere.setAdapter(adapter);
+            }
         }
     }
 
@@ -123,7 +138,7 @@ public class ResultatRechercheActivity extends Activity {
                 Intent detailBiere = new Intent(ResultatRechercheActivity.this, DetailBiere.class);
                 Beer biere = (Beer) adapter.getItemAtPosition(position);
 
-                detailBiere.putExtra("nomBiere", biere.name);
+                detailBiere.putExtra("nomBiere", biere);
 
                 startActivity(detailBiere);
                 onPause();

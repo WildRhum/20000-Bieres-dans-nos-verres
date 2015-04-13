@@ -1,11 +1,15 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,6 +18,7 @@ import java.util.Random;
 
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.geolocalisation.MapsActivity;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.recherche.RechercheActivity;
+import fr.amu.vingtkbieres.vingtkbieresdansnosverres.secondaire.ActiviteProfil;
 
 public class mainPage extends ActionBarActivity {
 
@@ -34,6 +39,15 @@ public class mainPage extends ActionBarActivity {
         boutonRecherche.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(mainPage.this, RechercheActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button myBeersButton = (Button) findViewById(R.id.myBeersButton);
+        myBeersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (mainPage.this, ActiviteProfil.class);
                 startActivity(intent);
             }
         });

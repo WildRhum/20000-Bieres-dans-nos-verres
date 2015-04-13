@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -57,34 +58,36 @@ public class RechercheActivity extends ActionBarActivity {
         asyncDbTest asyncTask = new asyncDbTest();
         asyncTask.execute();
 
-//        for(int i = 0; i < arrayStyle.size(); ++i)
-//        {
-//            System.out.println("TEST VALEUR :" + arrayStyle.get(i).text);
-//        }
-//
-//        if (arrayStyle.isEmpty())
-//            System.out.println("ArrayStyle vide!");
-        EditText edit = (EditText) findViewById(R.id.editTexteRechercheBiere);
+        final EditText edit = (EditText) findViewById(R.id.editTexteRechercheBiere);
         Button b = (Button) findViewById(R.id.boutonRecherche);
+        b.setBackgroundColor(getBaseContext().getResources().getColor(R.color.yellow));
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // array des styles choisi
                 ArrayList<Style> styleChoisi = new ArrayList<Style>();
 
                 for(int i = 0; i < arrayStyle.size(); ++i)
                 {
-                    if(!arrayStyle.get(i).text.equals("null"))
-                    {
-                        if(checkBox.get(i).isChecked()){
-                            styleChoisi.add(arrayStyle.get(i));
-                        }
+                    // pour chaque style, s'il est coché on l'ajoute aux styles choisi
+                    if(checkBox.get(i).isChecked()){
+                        styleChoisi.add(arrayStyle.get(i));
                     }
                 }
+                // récupère le champs de recherche par nom
+                String nomBiere = edit.getText().toString();
 
-                Intent intent = new Intent(RechercheActivity.this, ResultatRechercheActivity.class);
-                intent.putParcelableArrayListExtra("style", styleChoisi);
-                startActivity(intent);
+                // rien n'a été selectioné ou rempli dans le champs recherche
+                if(nomBiere.equals("null") || styleChoisi.isEmpty())
+                    Toast.makeText(getBaseContext(), "Veuillez choisir des styles de bière ou bien entrer un nom dans la recherche", Toast.LENGTH_SHORT).show();
+                else
+                {
+                    // On place les valeurs et l'envoi à resultatRechercheActivity
+                    Intent intent = new Intent(RechercheActivity.this, ResultatRechercheActivity.class);
+                    intent.putExtra("nom", nomBiere);
+                    intent.putParcelableArrayListExtra("style", styleChoisi);
+                    startActivity(intent);
+                }
             }
         });
     }

@@ -6,27 +6,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.R;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.database.Beer;
-import fr.amu.vingtkbieres.vingtkbieresdansnosverres.database.Database;
 
 public class DetailBiere extends ActionBarActivity {
-    String nomBiere;
-    Database db;
-    ArrayList<Beer> listBiere;
+    Beer biere;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_biere);
 
-        nomBiere = getIntent().getStringExtra("nomBiere");
-
+        biere = getIntent().getExtras().getParcelable("nomBiere");
 
         TextView textViewBiere = (TextView) findViewById(R.id.idBiere);
-        textViewBiere.setText(listBiere.get(0).name);
+        textViewBiere.setText(biere.name);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
