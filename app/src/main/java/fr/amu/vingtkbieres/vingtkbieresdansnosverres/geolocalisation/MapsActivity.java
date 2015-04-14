@@ -1,6 +1,7 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres.geolocalisation;
 
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.R;
+import fr.amu.vingtkbieres.vingtkbieresdansnosverres.menu.GlobalMenu;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,6 +13,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +42,22 @@ public class MapsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.global, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if( GlobalMenu.handle(this, item) )
+            return true;
+
+        return super.onOptionsItemSelected( item );
     }
 
     private void setUpMapIfNeeded() {
