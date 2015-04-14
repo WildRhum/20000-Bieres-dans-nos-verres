@@ -45,7 +45,10 @@ public class RechercheActivity extends ActionBarActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             arrayStyle = styles;
-            creerCheckBox();
+            if (!styles.isEmpty())
+                creerCheckBox();
+            else
+                Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.internetProblem), Toast.LENGTH_LONG).show();
         }
     }
 
