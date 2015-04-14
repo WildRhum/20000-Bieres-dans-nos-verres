@@ -30,8 +30,4 @@
         android:title="@string/global_section_6"
         android:orderInCategory="60"
         app:showAsAction="never" />
-
-    <item android:title="Seperator"
-        android:drawable="@drawable/separator"
-        android:orderInCategory="70"/>
 </menu>

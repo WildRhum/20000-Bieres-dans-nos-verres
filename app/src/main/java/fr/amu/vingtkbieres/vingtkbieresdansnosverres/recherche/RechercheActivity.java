@@ -21,6 +21,7 @@ import fr.amu.vingtkbieres.vingtkbieresdansnosverres.R;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.database.Database;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.database.JSONDataException;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.database.Style;
+import fr.amu.vingtkbieres.vingtkbieresdansnosverres.menu.GlobalMenu;
 
 public class RechercheActivity extends ActionBarActivity {
     ArrayList<Style> arrayStyle = new ArrayList<>();
@@ -113,6 +114,7 @@ public class RechercheActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.global, menu);
         getMenuInflater().inflate(R.menu.menu_recherche, menu);
         return true;
     }
@@ -128,6 +130,9 @@ public class RechercheActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+
+        if( GlobalMenu.handle( this, item ) )
+            return true;
 
         return super.onOptionsItemSelected(item);
     }

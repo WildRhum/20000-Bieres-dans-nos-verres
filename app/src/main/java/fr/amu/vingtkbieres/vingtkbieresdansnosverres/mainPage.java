@@ -1,14 +1,12 @@
 package fr.amu.vingtkbieres.vingtkbieresdansnosverres;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.geolocalisation.MapsActivity;
+import fr.amu.vingtkbieres.vingtkbieresdansnosverres.menu.GlobalMenu;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.recherche.RechercheActivity;
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.secondaire.ActiviteProfil;
 
@@ -74,5 +73,13 @@ public class mainPage extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.global, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if( GlobalMenu.handle( this, item ) )
+            return true;
+
+        return super.onOptionsItemSelected( item );
     }
 }
