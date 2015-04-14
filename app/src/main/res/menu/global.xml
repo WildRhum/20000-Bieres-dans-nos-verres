@@ -1,3 +1,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/global_section_1"
+        android:title="@string/global_section_1"
+        android:orderInCategory="10"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/global_section_2"
+        android:title="@string/global_section_2"
+        android:orderInCategory="20"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/global_section_3"
+        android:title="@string/global_section_3"
+        android:orderInCategory="30"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/global_section_4"
+        android:title="@string/global_section_4"
+        android:orderInCategory="40"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/global_section_5"
+        android:title="@string/global_section_5"
+        android:orderInCategory="50"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/global_section_6"
+        android:title="@string/global_section_6"
+        android:orderInCategory="60"
+        app:showAsAction="never" />
 </menu>
