@@ -135,6 +135,10 @@ public class Database {
         JSONData data = parser.parseFromUrl( generateUrl( CODE_BEER_BY_NAME, name ) );
 
         ArrayList<Beer> list = new ArrayList<>();
+
+        if( !testJSONData( data ) )
+            return null;
+
         for( JSONObject obj : data.getData() ) {
             list.add(new Beer(obj.getInt("overallScore_beer"), obj.getInt("styleScore_beer"),
                     Float.parseFloat((String) (obj.get( "abv_beer" ))), obj.getString("name_beer"),
