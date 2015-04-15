@@ -27,13 +27,28 @@ public class DetailBiere extends ActionBarActivity {
         style.setText(biere.style);
 
         TextView overallScore = (TextView) findViewById(R.id.textViewOverallScore);
-        overallScore.setText(String.valueOf(biere.overallScore));
+        String ovScore = "Score général : ";
+        if (biere.overallScore < 0)
+            ovScore += "Non connu";
+        else
+            ovScore += String.valueOf(biere.overallScore);
+        overallScore.setText(ovScore);
 
         TextView styleScore = (TextView) findViewById(R.id.textViewStyleScore);
-        styleScore.setText(String.valueOf(biere.styleScore));
+        String styScore = "Score par style : ";
+        if (biere.styleScore < 0)
+            styScore += "Non connu";
+        else
+            styScore += String.valueOf(biere.styleScore);
+        styleScore.setText(styScore);
 
         TextView abv = (TextView) findViewById(R.id.textViewAbv);
-        abv.setText(Float.toString(biere.abv));
+        String abvBiere = "Degré d'alcool : ";
+        if (biere.abv < 0)
+            abvBiere += "Non connu";
+        else
+            abvBiere += Float.toString(biere.abv);
+        abv.setText(abvBiere);
 
         TextView location = (TextView) findViewById(R.id.textViewLocation);
         location.setText(biere.address +  " " + biere.country);
