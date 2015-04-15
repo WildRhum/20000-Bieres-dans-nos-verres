@@ -28,14 +28,13 @@ public class RechercheActivity extends ActionBarActivity {
     ArrayList<CheckBox> checkBox;
 
     private class asyncDbTest extends AsyncTask< Void, Void, Void >{
-        ArrayList<Style> styles;
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                styles = new ArrayList<>( Database.getAllStyle() );
-            } catch (JSONException e) {
-                e.printStackTrace();
+                arrayStyle = Database.getAllStyle();
             } catch (JSONDataException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             return null;
@@ -44,8 +43,7 @@ public class RechercheActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            arrayStyle = styles;
-            if (!styles.isEmpty())
+            if (arrayStyle != null)
                 creerCheckBox();
             else
                 Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.internetProblem), Toast.LENGTH_LONG).show();
