@@ -27,6 +27,7 @@ public class ResultatRechercheActivity extends Activity {
     protected ListView listBiere = null;
     List<Beer> labelItems = new ArrayList<Beer>();
     ResultatRechercheAdapter adapter;
+    String nomBiere;
     ArrayList<Style> styles = new ArrayList<Style>();
 
     // permet de réaliser la barre d'attente
@@ -59,16 +60,32 @@ public class ResultatRechercheActivity extends Activity {
         protected Void doInBackground(Void... params) {
             List<Beer> tmpBeer;
             try {
-                for(int i = 0; i < styles.size(); ++i)
+                if(nomBiere == null)
                 {
-                    // place les bières dans un arrayList temporaire
-                    tmpBeer = Database.searchBeerByStyle(styles.get(i).id, 0, 15);
+                    for(int i = 0; i < styles.size(); ++i)
+                    {
+                        // place les bières dans un arrayList temporaire
+                        tmpBeer = Database.searchBeerByStyle(styles.get(i).id, 0, 15);
+                        if (tmpBeer != null)
+                        {
+                            for(int j = 0; j < tmpBeer.size(); ++j) {
+                                // ajoute les valeurs petit à petit dans la liste
+                                labelItems.add(tmpBeer.get(j));
+                            }
+                        }
 
-                    for(int j = 0; j < tmpBeer.size(); ++j) {
-                        // ajoute les valeurs petit à petit dans la liste
-                        labelItems.add(tmpBeer.get(j));
                     }
-
+                }
+                else if(styles.isEmpty())
+                {
+                    tmpBeer = Database.searchBeerByName(nomBiere);
+                    if(tmpBeer != null)
+                    {
+                        for(int j = 0; j < tmpBeer.size(); ++j) {
+                            // ajoute les valeurs petit à petit dans la liste
+                            labelItems.add(tmpBeer.get(j));
+                        }
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -108,12 +125,7 @@ public class ResultatRechercheActivity extends Activity {
             listBiere.setFastScrollEnabled(true);
 
             styles = this.getIntent().getParcelableArrayListExtra("style");
-
-            for (int i =0; i < styles.size(); ++i)
-                System.out.println("Valeur: " + styles.get(i).text);
-
-            if (styles.isEmpty())
-                System.out.println("Styles vide Resultat");
+            nomBiere = this.getIntent().getStringExtra("nom");
 
             asyncDbTest asyncTask = new asyncDbTest();
             asyncTask.execute();
