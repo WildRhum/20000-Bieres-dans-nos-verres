@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.amu.vingtkbieres.vingtkbieresdansnosverres.R;
@@ -19,8 +20,36 @@ public class DetailBiere extends ActionBarActivity {
 
         biere = getIntent().getExtras().getParcelable("nomBiere");
 
-        TextView textViewBiere = (TextView) findViewById(R.id.idBiere);
-        textViewBiere.setText(biere.name);
+        TextView nom = (TextView) findViewById(R.id.textViewName);
+        nom.setText(biere.name);
+
+        TextView style = (TextView) findViewById(R.id.textViewStyle);
+        style.setText(biere.style);
+
+        TextView overallScore = (TextView) findViewById(R.id.textViewOverallScore);
+        overallScore.setText(String.valueOf(biere.overallScore));
+
+        TextView styleScore = (TextView) findViewById(R.id.textViewStyleScore);
+        styleScore.setText(String.valueOf(biere.styleScore));
+
+        TextView abv = (TextView) findViewById(R.id.textViewAbv);
+        abv.setText(Float.toString(biere.abv));
+
+        TextView location = (TextView) findViewById(R.id.textViewLocation);
+        location.setText(biere.address +  " " + biere.country);
+
+        String country = biere.country.replaceAll(" ", "_").toLowerCase();
+        int resID = this.getResources().getIdentifier(
+                country , "drawable", this.getPackageName());
+
+        if(resID == 0)
+        {
+            resID = this.getResources().getIdentifier(
+                    "unknown" , "drawable", this.getPackageName());
+        }
+
+        ImageView flagDetail = (ImageView) findViewById(R.id.imageDetailFlag);
+        flagDetail.setImageDrawable(this.getResources().getDrawable(resID));
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

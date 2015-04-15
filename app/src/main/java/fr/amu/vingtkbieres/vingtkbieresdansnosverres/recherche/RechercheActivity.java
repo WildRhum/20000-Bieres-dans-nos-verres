@@ -28,14 +28,13 @@ public class RechercheActivity extends ActionBarActivity {
     ArrayList<CheckBox> checkBox;
 
     private class asyncDbTest extends AsyncTask< Void, Void, Void >{
-        ArrayList<Style> styles;
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                styles = new ArrayList<>( Database.getAllStyle() );
-            } catch (JSONException e) {
-                e.printStackTrace();
+                arrayStyle = Database.getAllStyle();
             } catch (JSONDataException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             return null;
@@ -44,8 +43,10 @@ public class RechercheActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            arrayStyle = styles;
-            creerCheckBox();
+            if (arrayStyle != null)
+                creerCheckBox();
+            else
+                Toast.makeText(getBaseContext(), getBaseContext().getString(R.string.internetProblem), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -65,10 +66,10 @@ public class RechercheActivity extends ActionBarActivity {
                 // array des styles choisi
                 ArrayList<Style> styleChoisi = new ArrayList<Style>();
 
-                for(int i = 0; i < arrayStyle.size(); ++i)
+                for(int i = 1; i < arrayStyle.size(); ++i)
                 {
                     // pour chaque style, s'il est coché on l'ajoute aux styles choisi
-                    if(checkBox.get(i).isChecked()){
+                    if(checkBox.get(i-1).isChecked()){
                         styleChoisi.add(arrayStyle.get(i));
                     }
                 }
@@ -95,9 +96,9 @@ public class RechercheActivity extends ActionBarActivity {
         LinearLayout ll = (LinearLayout) findViewById(R.id.rechercheBiere);
 
         // creation des checkBox
-        for(int i = 0; i < arrayStyle.size(); i++){
+        for(int i = 1; i < arrayStyle.size(); i++){
             CheckBox newCheckBox = new CheckBox(this);
-            newCheckBox.setId(i);
+            newCheckBox.setId(i-1);
             newCheckBox.setText(arrayStyle.get(i).text);
 
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
