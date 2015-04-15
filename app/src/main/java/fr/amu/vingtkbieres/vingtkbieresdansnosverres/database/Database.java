@@ -11,8 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.Result;
-
 /**
  * Created by legeek on 12/03/15.
  */
@@ -104,7 +102,7 @@ public class Database {
         return new Style( data.getCode(), data.getData().get(0).getString( "text_style" ) );
     }
 
-    static public List<Style> getAllStyle() throws JSONException, JSONDataException {
+    static public ArrayList<Style> getAllStyle() throws JSONException, JSONDataException {
         JSONData data = parser.parseFromUrl( generateUrl( CODE_STYLE_ALL ) );
 
         if( !testJSONData( data ) )
