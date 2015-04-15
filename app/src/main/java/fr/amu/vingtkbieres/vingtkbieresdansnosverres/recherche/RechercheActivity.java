@@ -74,10 +74,10 @@ public class RechercheActivity extends ActionBarActivity {
                     }
                 }
                 // récupère le champs de recherche par nom
-                String nomBiere = edit.getText().toString();
+                String nomBiere = edit.getText().toString().trim();
 
                 // rien n'a été selectioné ou rempli dans le champs recherche
-                if(nomBiere.equals("null") || styleChoisi.isEmpty())
+                if(nomBiere.equals("") && styleChoisi.isEmpty())
                     Toast.makeText(getBaseContext(), "Veuillez choisir des styles de bière ou bien entrer un nom dans la recherche", Toast.LENGTH_SHORT).show();
                 else
                 {
